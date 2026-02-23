@@ -1,0 +1,74 @@
+@startuml TeamBoard
+left to right direction
+
+actor Admin
+actor Membre
+actor Responsable
+
+rectangle TeamBoard {
+
+    ' Authentification
+    usecase "Se connecter" as Login
+    usecase "Se déconnecter" as Logout
+
+    ' Membre
+    usecase "Consulter les nouveautés" as News
+    usecase "Soumettre une demande" as Ask
+    usecase "Demande liée au temps de travail" as AskTemp
+    usecase "Demande administrative" as AskAdmin
+    usecase "Demande liée au poste" as AskPost
+    usecase "Demande contractuelle" as AskContract
+
+    ' Responsable
+    usecase "Traiter les demandes" as ManageAsk
+    usecase "Accepter la demande" as AcceptAsk
+    usecase "Refuser la demande" as RefuseAsk
+    usecase "Gérer les nouveautés" as ManageNews
+    usecase "Gérer les notifications" as ManageNotice
+    usecase "Gérer les employés" as ManageAccounts
+    ' Admin
+    usecase "Gérer les comptes des responsables" as gestion_responsables
+    usecase "Gérer les nouveautés" as gestion_nouveautes
+    usecase "Gérer les comptes des membres" as gestion_membres
+    usecase "Gérer les comptes des administrateurs" as gestion_admins
+}
+
+' -------- Relations Membre --------
+Membre --> Login
+Membre --> Logout
+Membre --> News
+Membre --> Ask
+
+Ask <|-- AskTemp
+Ask <|-- AskAdmin
+Ask <|-- AskPost
+Ask <|-- AskContract
+
+News ..> Login : <<include>>
+Ask ..> Login : <<include>>
+
+' -------- Relations Responsable --------
+Responsable --> Login
+Responsable --> Logout
+Responsable --> ManageAsk
+Responsable --> ManageNews
+Responsable --> ManageNotice
+Responsable --> ManageAccounts
+
+ManageAsk ..> Login : <<include>>
+ManageNews ..> Login : <<include>>
+ManageNotice ..> Login : <<include>>
+ManageAccounts ..> Login : <<include>>
+
+ManageAsk ..> AcceptAsk : <<extend>>
+ManageAsk ..> RefuseAsk : <<extend>>
+
+' -------- Relations Admin --------
+Admin --> Login
+Admin --> Logout
+Admin --> gestion_admins
+Admin --> gestion_membres
+Admin --> gestion_responsables
+Admin --> gestion_nouveautes
+
+@enduml
