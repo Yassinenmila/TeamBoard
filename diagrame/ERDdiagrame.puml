@@ -1,0 +1,157 @@
+@startuml TeamBoard_ERD
+
+entity users {
+    id PK
+    nom
+    email
+    password
+    role
+}
+
+entity demandes {
+    id PK
+    user_id FK
+    type
+    description
+    statut
+    date
+}
+
+entity note_internes {
+    id PK
+    demande_id FK
+    contenu
+    date
+}
+
+entity taches {
+    id PK
+    titre
+    description
+    statut
+    priorite
+    date_limite
+    created_by FK
+}
+
+entity affectations {
+    id PK
+    tache_id FK
+    user_id FK
+}
+
+entity livrables {
+    id PK
+    tache_id FK
+    user_id FK
+    type
+    url
+    date
+}
+
+entity commentaires {
+    id PK
+    user_id FK
+    contenu
+    tache_id FK
+    demande_id FK
+    date
+}
+
+entity annonces {
+    id PK
+    user_id FK
+    titre
+    contenu
+    type
+    date_publication
+}
+
+entity reunions {
+    id PK
+    user_id FK
+    titre
+    description
+    date
+    lieu
+}
+
+entity invitations {
+    id PK
+    reunion_id FK
+    user_id FK
+    statut
+}
+
+entity feedbacks {
+    id PK
+    user_id FK
+    titre
+    description
+    date
+}
+
+entity reponse_feedbacks {
+    id PK
+    feedback_id FK
+    user_id FK
+    contenu
+}
+
+entity presences {
+    id PK
+    user_id FK
+    date
+    etat
+}
+
+entity notifications {
+    id PK
+    user_id FK
+    message
+    type
+    lu
+    date
+}
+
+entity logs {
+    id PK
+    user_id FK
+    action
+    model_type
+    model_id
+    date
+}
+
+' ===== Relations =====
+users ||--o{ demandes
+demandes ||--o{ note_internes
+
+users ||--o{ taches : crée
+taches ||--o{ affectations
+users ||--o{ affectations
+
+taches ||--o{ livrables
+users ||--o{ livrables
+
+taches ||--o{ commentaires
+demandes ||--o{ commentaires
+users ||--o{ commentaires
+
+users ||--o{ annonces
+
+users ||--o{ reunions
+reunions ||--o{ invitations
+users ||--o{ invitations
+
+users ||--o{ feedbacks
+feedbacks ||--o{ reponse_feedbacks
+users ||--o{ reponse_feedbacks
+
+users ||--o{ presences
+
+users ||--o{ notifications
+
+users ||--o{ logs
+
+@enduml
