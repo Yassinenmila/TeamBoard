@@ -1,0 +1,16 @@
+FROM node:20-alpine
+
+# Dossier de travail
+WORKDIR /app
+
+# Copier le projet (si existant)
+COPY . .
+
+# Installer dépendances seulement si package.json existe
+RUN [ -f package.json ] && npm install || echo "No package.json"
+
+# Exposer port Vite
+EXPOSE 5173
+
+# Lancer Vite si projet existe
+CMD sh -c "[ -f package.json ] && npm run dev -- --host || tail -f /dev/null"

@@ -1,0 +1,22 @@
+FROM php:8.4-fpm
+
+# Installer dépendances nécessaires
+RUN apt-get update && apt-get install -y \
+    git unzip libpq-dev zip curl \
+    && docker-php-ext-install pdo pdo_pgsql
+
+# Installer Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Dossier de travail
+WORKDIR /var/www
+
+# Copier le projet (optionnel si volume)
+COPY . .
+
+# Installer dépendances si projet Laravel existe
+RUN if [ -f composer.json ]; then composer install --no-interaction; fi
+
+EXPOSE 9000
+
+CMD ["php-fpm"]
