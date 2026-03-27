@@ -11,6 +11,7 @@ entity users {
 entity demandes {
     id PK
     user_id FK
+    objet
     type
     description
     statut

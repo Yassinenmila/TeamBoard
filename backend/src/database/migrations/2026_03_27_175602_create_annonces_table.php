@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('annonces', function (Blueprint $table) {
             $table->id();
+            $table->string('titre');
+            $table->text('contenu');
+            $table->enum('type',['urgent','general']);
+            $table->ForeignId('user_id')->containedIn('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
