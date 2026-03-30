@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
+            $table->ForeignId('user_id')->containedIn('users')->onDelete('cascade');
+            $table->text('message');
+            $table->enum('type',['demande','Tache','Reunion','Annonce']);
+            $table->boolean('lu')->default('false');
             $table->timestamps();
         });
     }
