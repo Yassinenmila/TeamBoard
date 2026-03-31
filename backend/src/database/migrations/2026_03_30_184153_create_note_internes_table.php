@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('note_internes', function (Blueprint $table) {
             $table->id();
+            $table->ForeignId('demande_id')->containedIn('demandes')->onDelete('cascade');
+            $table->text('contenu');
             $table->timestamps();
         });
     }

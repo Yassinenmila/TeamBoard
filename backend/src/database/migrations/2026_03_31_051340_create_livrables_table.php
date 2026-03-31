@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('livrables', function (Blueprint $table) {
             $table->id();
+            $table->ForeignId('tache_id')->containedIn('taches')->onDelete('cascade');
+            $table->ForeignId('user_id')->conteinedIn('users')->onDelete('cascade');
+            $table->string('type');
+            $table->string('url');
             $table->timestamps();
         });
     }

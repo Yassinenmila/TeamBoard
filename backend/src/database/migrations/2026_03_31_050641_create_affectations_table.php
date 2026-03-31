@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('affectations', function (Blueprint $table) {
             $table->id();
+            $table->ForeignId('tache_id')->containedIn('taches')->onDelete('cascade');
+            $table->ForeignId('user_id')->containedIn('users')->onDelete('cascade');
+            $table->unique(['user_id','tache_id']);
             $table->timestamps();
         });
     }
