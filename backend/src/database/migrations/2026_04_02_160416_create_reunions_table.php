@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('presences', function (Blueprint $table) {
+        Schema::create('reunions', function (Blueprint $table) {
             $table->id();
-            $table->ForeignId('user_id')->containedIn('users')->onDelete('cascade');
-            $table->date('date');
-            $table->enum('etat',['present','absent','retard','conge']);
             $table->timestamps();
         });
     }
@@ -25,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('presences');
+        Schema::dropIfExists('reunions');
     }
 };

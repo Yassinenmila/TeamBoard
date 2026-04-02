@@ -8,3 +8,5 @@ Route::get('/test', function () {
         'message' => 'API fonctionne 🚀'
     ]);
 });
+
+// profil -> competence technique > project realiser -> education -> langue

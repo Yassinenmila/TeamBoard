@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('reponse_feedbacks', function (Blueprint $table) {
             $table->id();
+            $table->ForeignId('feedback_id')->containedIn('feedbacks')->onDelete('cascade');
+            $table->ForeignId('user_id')->containedIn('users')->onDelete('cascade');
+            $table->text('contenu');
             $table->timestamps();
         });
     }
