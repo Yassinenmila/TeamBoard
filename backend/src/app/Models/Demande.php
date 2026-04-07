@@ -11,7 +11,7 @@ class Demande extends Model
 
     protected $fillable =[
         'type',
-        'description'
+        'description',
         'status',
-    ]
+    ];
 }

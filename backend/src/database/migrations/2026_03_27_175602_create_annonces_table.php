@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('titre');
             $table->text('contenu');
             $table->enum('type',['urgent','general']);
-            $table->ForeignId('user_id')->containedIn('users')->onDelete('cascade');
+            $table->ForeignId('user_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

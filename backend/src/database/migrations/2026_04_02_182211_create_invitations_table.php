@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('invitations', function (Blueprint $table) {
             $table->id();
-            $table->ForeignId('reunion_id')->containedIn('reunions')->onDelete('cascade');
-            $table->ForeignId('user_id')->containedIn('users')->onDelete('cascade');
+            $table->ForeignId('reunion_id')->constrained()->cascadeOnDelete();
+            $table->ForeignId('user_id')->constrained()->cascadeOnDelete();
             $table->enum('status',['pending','accepted','rejected']);
             $table->timestamps();
         });

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('status',['en_attente','en_cours','terminee'])->default('en_attente');
             $table->enum('priorite',['faible','moyenne','haute'])->default('moyenne');
             $table->dateTime('date_limite')->nullable();
-            $table->ForeignId('created_by')->containedIn('users')->onDelete('cascade');
+            $table->ForeignId('created_by')->constrained('users')->cascadeOnDelete();
             $table->timestamps();
         });
     }

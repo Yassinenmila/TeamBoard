@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reponse_feedbacks', function (Blueprint $table) {
+        Schema::create('commentaires', function (Blueprint $table) {
             $table->id();
-            $table->ForeignId('feedback_id')->constrained()->cascadeOnDelete();
-            $table->ForeignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->morphs('commentable');
             $table->text('contenu');
             $table->timestamps();
         });
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reponse_feedbacks');
+        Schema::dropIfExists('commentaires');
     }
 };

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('presences', function (Blueprint $table) {
             $table->id();
-            $table->ForeignId('user_id')->containedIn('users')->onDelete('cascade');
+            $table->ForeignId('user_id')->constrained()->cascadeOnDelete();
             $table->date('date');
             $table->enum('etat',['present','absent','retard','conge']);
             $table->timestamps();
