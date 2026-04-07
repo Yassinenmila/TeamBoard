@@ -1,6 +1,6 @@
 @startuml TeamBoard_ERD
 
-entity users {
+entity users {1
     id PK
     nom
     email
@@ -8,7 +8,7 @@ entity users {
     role
 }
 
-entity demandes {
+entity demandes {4
     id PK
     user_id FK
     type
@@ -17,14 +17,14 @@ entity demandes {
     date
 }
 
-entity note_internes {
+entity note_internes {4
     id PK
     demande_id FK
     contenu
     date
 }
 
-entity taches {
+entity taches {1
     id PK
     titre
     description
@@ -34,7 +34,7 @@ entity taches {
     created_by FK
 }
 
-entity affectations {
+entity affectations {1
     id PK
     tache_id FK
     user_id FK
