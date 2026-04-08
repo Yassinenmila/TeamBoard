@@ -48,7 +48,9 @@ class User extends Authenticatable
     }
 
     public function reunions(){
-        return $this->hasMany(Reunion::class,'invitations')->withPivot('status')->withTimestamps();
+        return $this->belongsToMany(Reunion::class, 'invitations', 'user_id', 'reunion_id')
+                ->withPivot('statut')
+                ->withTimestamps();
     }
 
     public function notifications(){
@@ -59,7 +61,7 @@ class User extends Authenticatable
         return $this->hasMany(Tache::class,'created_by');
     }
 
-    public function tacheAssignes(){
+    public function tachesAssignes(){
         return $this->hasMany(Tache::class,'affectations')->withPivot('status')->withTimestamps();
     }
 

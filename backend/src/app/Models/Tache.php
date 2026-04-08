@@ -16,7 +16,7 @@ class Tache extends Model
         'date_limite',
     ];
 
-    public function creator(){
+    public function createur(){
         return $this->belongsTo(User::class,'created_by');
     }
 

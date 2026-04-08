@@ -20,18 +20,21 @@ class AuthController extends Controller
         $user = User::where('email',$request->email)->first();
 
         if(!$user|| !Hash::check($request->password,$user->password)){
-            throw ValidationException::withMessages([ 'email'=>['Les informations sont incorrectes'] ]);
+            return response()->json([
+                'message'=>'email ou mot de passe incorrect'
+            ],401);
         }
 
         $token= $user->createToken('api_Token')->plainTextToken;
 
-        response()->json([
+        return response()->json([
             'user'=>[
                 'id'=>$user->id,
                 'name'=>$user->name,
                 'email'=>$user->email,
+                'role'=>$user->role,
             ],
-            'Token'=>$token,
+            'token'=>$token,
             'message'=>'connection reussie'
         ],200);
 
@@ -42,5 +45,9 @@ class AuthController extends Controller
         return response()->json([
             'message'=> 'deconnection reussie'
         ],200);
+    }
+
+    public function me(Request $request){
+        return response()->json($request->user());
     }
 }
