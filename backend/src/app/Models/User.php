@@ -39,15 +39,15 @@ class User extends Authenticatable
         ];
     }
 
+    public function demandes(){
+        return $this->hasMany(Demande::class);
+    }
+
     public function presences(){
         return $this->hasMany(Presence::class);
     }
 
     public function reunions(){
-        return $this->hasMany(Reunion::class,'created_by');
-    }
-
-    public function invitations(){
         return $this->hasMany(Reunion::class,'invitations')->withPivot('status')->withTimestamps();
     }
 
@@ -59,7 +59,7 @@ class User extends Authenticatable
         return $this->hasMany(Tache::class,'created_by');
     }
 
-    public function affectations(){
+    public function tacheAssignes(){
         return $this->hasMany(Tache::class,'affectations')->withPivot('status')->withTimestamps();
     }
 
@@ -67,6 +67,9 @@ class User extends Authenticatable
         return $this->hasMany(Livrable::class);
     }
 
+    public function commentaires(){
+        return $this->hasMany(Commentaire::class);
+    }
 
     public function annonces(){
         return $this->hasMany(Annonce::class);

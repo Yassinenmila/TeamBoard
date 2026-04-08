@@ -18,4 +18,8 @@ class Demande extends Model
     public function commentaires(){
         return $this->morphMany(Commentaire::class,'commentable');
     }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }
