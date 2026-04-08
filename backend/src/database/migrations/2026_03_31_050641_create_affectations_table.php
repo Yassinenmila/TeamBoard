@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->ForeignId('tache_id')->constrained()->cascadeOnDelete();
             $table->ForeignId('user_id')->constrained()->cascadeOnDelete();
+            $table->enum('status',['up_comming','in_progress','completed'])->default('up_comming');
             $table->unique(['user_id','tache_id']);
             $table->timestamps();
         });

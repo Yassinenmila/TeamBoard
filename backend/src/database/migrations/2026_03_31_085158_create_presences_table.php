@@ -15,7 +15,11 @@ return new class extends Migration
             $table->id();
             $table->ForeignId('user_id')->constrained()->cascadeOnDelete();
             $table->date('date');
-            $table->enum('etat',['present','absent','retard','conge']);
+            $table->time('heure_arrivee')->nullable();
+            $table->time('heure_depart')->nullable();
+            $table->enum('etat',['present','absent','retard','conge'])->default('absent');
+            $table->text('commentaire')->nullable();
+            $table->unique(['user_id', 'date']);
             $table->timestamps();
         });
     }

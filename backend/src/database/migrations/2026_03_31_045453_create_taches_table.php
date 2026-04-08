@@ -14,9 +14,7 @@ return new class extends Migration
         Schema::create('taches', function (Blueprint $table) {
             $table->id();
             $table->string('titre');
-            $table->text('dscription');
-            $table->enum('status',['en_attente','en_cours','terminee'])->default('en_attente');
-            $table->enum('priorite',['faible','moyenne','haute'])->default('moyenne');
+            $table->text('description');
             $table->dateTime('date_limite')->nullable();
             $table->ForeignId('created_by')->constrained('users')->cascadeOnDelete();
             $table->timestamps();

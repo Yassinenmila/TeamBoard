@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->ForeignId('tache_id')->constrained()->cascadeOnDelete();
             $table->ForeignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('type');
+            $table->string('type')->nullable();
+            $table->text('commentaire')->nullable();
             $table->string('url');
             $table->timestamps();
         });

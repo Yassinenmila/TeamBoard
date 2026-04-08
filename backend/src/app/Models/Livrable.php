@@ -13,6 +13,19 @@ class Livrable extends Model
         'tache_id',
         'user_id',
         'type',
+        'commentaire',
         'url',
     ];
+
+    public function tache(){
+        return $this->belongsTo(Tache::class);
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
+    public function commentaires(){
+        return $this->morphMany(Commentaire::class,'commentable');
+    }
 }

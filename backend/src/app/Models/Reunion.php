@@ -16,4 +16,12 @@ class Reunion extends Model
         'date',
         'lieu',
     ];
+
+    public function creator(){
+        return $this->belongsTo(User::class,'created_by');
+    }
+
+    public function invitations(){
+        return $this->belongsToMany(User::class,'invitations')->withPivot('status')->withTimestamps();
+    }
 }

@@ -14,4 +14,8 @@ class Demande extends Model
         'description',
         'status',
     ];
+
+    public function commentaires(){
+        return $this->morphMany(Commentaire::class,'commentable');
+    }
 }

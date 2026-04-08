@@ -39,6 +39,35 @@ class User extends Authenticatable
         ];
     }
 
+    public function presences(){
+        return $this->hasMany(Presence::class);
+    }
+
+    public function reunions(){
+        return $this->hasMany(Reunion::class,'created_by');
+    }
+
+    public function invitations(){
+        return $this->hasMany(Reunion::class,'invitations')->withPivot('status')->withTimestamps();
+    }
+
+    public function notifications(){
+        return $this->hasMany(Notification::class);
+    }
+
+    public function tachesCrees(){
+        return $this->hasMany(Tache::class,'created_by');
+    }
+
+    public function affectations(){
+        return $this->hasMany(Tache::class,'affectations')->withPivot('status')->withTimestamps();
+    }
+
+    public function livrables(){
+        return $this->hasMany(Livrable::class);
+    }
+
+
     public function annonces(){
         return $this->hasMany(Annonce::class);
     }

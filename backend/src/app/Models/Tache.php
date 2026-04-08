@@ -13,7 +13,22 @@ class Tache extends Model
         'titre',
         'description',
         'status',
-        'priorite',
         'date_limite',
     ];
+
+    public function creator(){
+        return $this->belongsTo(User::class,'created_by');
+    }
+
+    public function livrables(){
+        return $this->hasMany(Livrable::class);
+    }
+
+    public function utilisateurs(){
+        return $this->belongsToMany(User::class,'affectations')->withPivot('status')->withTimestamps();
+    }
+
+    public function commentaires(){
+        return $this->morphMany(Commentaire::class,'commentable');
+    }
 }
