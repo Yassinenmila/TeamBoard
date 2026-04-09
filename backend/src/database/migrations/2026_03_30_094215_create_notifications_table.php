@@ -16,7 +16,7 @@ return new class extends Migration
             $table->ForeignId('user_id')->constrained()->cascadeOnDelete();
             $table->text('message');
             $table->enum('type',['demande','Tache','Reunion','Annonce']);
-            $table->boolean('lu')->default('false');
+            $table->boolean('lu')->default(false);
             $table->timestamps();
         });
     }
