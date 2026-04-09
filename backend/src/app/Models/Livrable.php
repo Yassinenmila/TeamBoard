@@ -13,7 +13,7 @@ class Livrable extends Model
         'tache_id',
         'user_id',
         'type',
-        'commentaire',
+        'status',
         'url',
     ];
 

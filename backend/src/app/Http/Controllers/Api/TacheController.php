@@ -95,13 +95,13 @@ class TacheController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, Request $request)
     {
 
         $tache = Tache::findOrFail($id);
 
         // Sécurité : seul le créateur ou l'admin peut supprimer
-        if (auth()->id() !== $tache->created_by && auth()->user()->role !== 'admin') {
+        if ($request->user()->id !== $tache->created_by && $request->user()->role !== 'admin') {
             return response()->json(['message'=>'Non autorisé'], 403);
         }
 

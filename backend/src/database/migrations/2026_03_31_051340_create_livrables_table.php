@@ -16,7 +16,7 @@ return new class extends Migration
             $table->ForeignId('tache_id')->constrained()->cascadeOnDelete();
             $table->ForeignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('type')->nullable();
-            $table->text('commentaire')->nullable();
+            $table->enum('status', ['in_progress', 'done', 'accepted', 'rejected'])->default('in_progress');
             $table->string('url');
             $table->timestamps();
         });
