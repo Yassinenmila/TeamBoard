@@ -92,10 +92,10 @@ class LivrableController extends Controller
         // Admin / Responsable peut changer le statut et ajouter un commentaire
         if (in_array($user->role, ['admin', 'responsable'])) {
             $request->validate([
-                'statuts' => 'required|in:in_progress,valide,rejete'
+                'status' => 'required|in:in_progress,valide,rejete'
             ]);
 
-            $data['statuts'] = $request->statuts;
+            $data['status'] = $request->status;
 
             if ($request->message) {
                 $livrable->commentaires()->create([
@@ -108,7 +108,7 @@ class LivrableController extends Controller
 
         // Membre ne peut modifier que son propre livrable et si c'est encore in_progress
         if ($user->id === $livrable->user_id) {
-            if ($livrable->statuts !== 'in_progress') {
+            if ($livrable->status !== 'in_progress') {
                 return response()->json([
                     'message' => 'Vous ne pouvez plus modifier ce livrable.'
                 ], 403);
