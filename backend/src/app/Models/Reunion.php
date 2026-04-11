@@ -24,4 +24,10 @@ class Reunion extends Model
     public function participants(){
         return $this->belongsToMany(User::class,'invitations')->withPivot('status')->withTimestamps();
     }
+
+    public function notifications(){
+        return $this->hasMany(Notification::class,'notifiable');
+    }
+
+
 }

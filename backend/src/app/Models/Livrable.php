@@ -28,4 +28,8 @@ class Livrable extends Model
     public function commentaires(){
         return $this->morphMany(Commentaire::class,'commentable');
     }
+
+    public function notifications(){
+        return $this->morphMany(Notification::class,'notifiable');
+    }
 }

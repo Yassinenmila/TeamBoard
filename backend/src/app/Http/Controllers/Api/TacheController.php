@@ -119,6 +119,16 @@ class TacheController extends Controller
         $tache = Tache::findOrFail($id);
         $tache->utilisateurs()->syncWithoutDetaching($request->user_ids);
 
+        // Notifier chaque utilisateur assigné
+        foreach ($request->user_ids as $user_id) {
+
+            $tache->notifications()->create([
+                'user_id' => $user_id,
+                'message' => "Vous avez été assigné à la tâche : {$tache->titre}",
+                'lu' => false
+            ]);
+        }
+
         return response()->json([
             'message'=>'Tâche assignée avec succès',
             'tache'=>$tache->load('utilisateurs')

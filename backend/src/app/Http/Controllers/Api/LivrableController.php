@@ -5,15 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Livrable;
-use Termwind\Components\Li;
 
 class LivrableController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Liste des livrables
      */
-    public function index(Request $request){
-
+    public function index(Request $request)
+    {
         $user = $request->user();
 
         $query = Livrable::with([
@@ -22,17 +21,19 @@ class LivrableController extends Controller
             'commentaires.user'
         ]);
 
+        // Admin / Responsable → tout voir
         if (in_array($user->role, ['admin', 'responsable'])) {
             return response()->json($query->get());
         }
 
+        // Membre → seulement ses livrables
         return response()->json(
             $query->where('user_id', $user->id)->get()
         );
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Création d’un livrable
      */
     public function store(Request $request)
     {
@@ -43,35 +44,47 @@ class LivrableController extends Controller
             'message' => 'nullable|string'
         ]);
 
-        // Création du livrable avec statut initial
+        $user = $request->user();
+
+        // Création du livrable
         $livrable = Livrable::create([
             'tache_id' => $request->tache_id,
-            'user_id' => $request->user()->id,
+            'user_id' => $user->id,
             'type' => $request->type,
             'url' => $request->url,
-            'status' => 'in_progress', // <-- ici
+            'status' => 'in_progress',
         ]);
 
-        // Ajouter le message initial si fourni
+        // Message initial (commentaire)
         if ($request->message) {
             $livrable->commentaires()->create([
-                'user_id' => $request->user()->id,
+                'user_id' => $user->id,
                 'contenu' => $request->message
             ]);
         }
 
+        // 🔔 Notification au responsable (créateur de la tâche)
+        $createur = $livrable->tache->createur;
+
+        if ($createur && $createur->id !== $user->id) {
+            $livrable->notifications()->create([
+                'user_id' => $createur->id,
+                'message' => "Nouveau livrable soumis pour la tâche : {$livrable->tache->titre}",
+                'lu' => false
+            ]);
+        }
 
         return response()->json([
-            'message' => 'Livrable créé avec succès , veuiller attendre la validation',
+            'message' => 'Livrable créé avec succès, en attente de validation',
             'livrable' => $livrable->load('commentaires.user')
         ], 201);
     }
 
     /**
-     * Display the specified resource.
+     * Afficher un livrable
      */
-    public function show(Livrable $livrable){
-
+    public function show(Livrable $livrable)
+    {
         return response()->json(
             $livrable->load([
                 'user',
@@ -82,21 +95,37 @@ class LivrableController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Mise à jour
      */
     public function update(Livrable $livrable, Request $request)
     {
         $user = $request->user();
         $data = [];
 
-        // Admin / Responsable peut changer le statut et ajouter un commentaire
+        /**
+         * ADMIN / RESPONSABLE
+         */
         if (in_array($user->role, ['admin', 'responsable'])) {
+
             $request->validate([
-                'status' => 'required|in:in_progress,valide,rejete'
+                'status' => 'required|in:in_progress,valide,rejete',
+                'message' => 'nullable|string'
             ]);
 
             $data['status'] = $request->status;
 
+            // 🔔 Notification au membre
+            if (in_array($request->status, ['valide', 'rejete'])) {
+                $livrable->notifications()->create([
+                    'user_id' => $livrable->user_id,
+                    'message' => $request->status === 'valide'
+                        ? "Votre livrable a été validé ✅"
+                        : "Votre livrable a été rejeté ❌",
+                    'lu' => false
+                ]);
+            }
+
+            // 💬 commentaire du responsable
             if ($request->message) {
                 $livrable->commentaires()->create([
                     'user_id' => $user->id,
@@ -105,9 +134,12 @@ class LivrableController extends Controller
             }
         }
 
-
-        // Membre ne peut modifier que son propre livrable et si c'est encore in_progress
+        /**
+         * MEMBRE
+         */
         if ($user->id === $livrable->user_id) {
+
+            // interdit si validé/rejeté
             if ($livrable->status !== 'in_progress') {
                 return response()->json([
                     'message' => 'Vous ne pouvez plus modifier ce livrable.'
@@ -126,11 +158,22 @@ class LivrableController extends Controller
                 $data['type'] = $request->type;
             }
 
-            // Ajouter message du membre
+            // 💬 commentaire du membre
             if ($request->message) {
                 $livrable->commentaires()->create([
                     'user_id' => $user->id,
                     'contenu' => $request->message
+                ]);
+            }
+
+            // 🔔 notifier responsable modification
+            $createur = $livrable->tache->createur;
+
+            if ($createur && $createur->id !== $user->id) {
+                $livrable->notifications()->create([
+                    'user_id' => $createur->id,
+                    'message' => "Le livrable a été modifié pour la tâche : {$livrable->tache->titre}",
+                    'lu' => false
                 ]);
             }
         }
@@ -146,17 +189,23 @@ class LivrableController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Suppression
      */
     public function destroy(string $id, Request $request)
     {
         $livrable = Livrable::findOrFail($id);
         $user = $request->user();
-        if ($user->id !== $livrable->user_id && !in_array($user->role, ['admin', 'responsable']) && $livrable->status !== 'in_progress') {
+
+        if (
+            $user->id !== $livrable->user_id &&
+            !in_array($user->role, ['admin', 'responsable']) &&
+            $livrable->status !== 'in_progress'
+        ) {
             return response()->json([
                 'message' => 'Vous n\'avez pas la permission de supprimer ce livrable.'
             ], 403);
         }
+
         $livrable->delete();
 
         return response()->json([

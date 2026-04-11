@@ -70,11 +70,9 @@ class ReunionController extends Controller
                 ]);
 
                 // Créer une notification
-                $userNotif = User::find($inv_id);
-                $userNotif->notifications()->create([
-                    'contenu' => "Vous êtes invité(e) à la réunion : {$reunion->titre}",
-                    'type' => 'reunion',
-                    'reunion_id' => $reunion->id,
+                $reunion->notifications()->create([
+                    'user_id' => $inv_id,
+                    'message' => "Vous êtes invité(e) à la réunion : {$reunion->titre}",
                     'lu' => false
                 ]);
             }
@@ -129,11 +127,9 @@ class ReunionController extends Controller
                 ]);
 
                 // Créer une notification
-                $userNotif = User::find($inv_id);
-                $userNotif->notifications()->create([
-                    'contenu' => "Vous êtes invité(e) à la réunion : {$reunion->titre}",
-                    'type' => 'reunion',
-                    'reunion_id' => $reunion->id,
+                $reunion->notifications()->create([
+                    'user_id' => $inv_id,
+                    'message' => "Vous êtes invité(e) à la réunion : {$reunion->titre}",
                     'lu' => false
                 ]);
             }
