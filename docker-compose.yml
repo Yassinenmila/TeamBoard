@@ -23,7 +23,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.frontend
     container_name: frontend
-    working_dir: /app
+    working_dir: /app/app
     volumes:
       - ./frontend:/app
     ports:

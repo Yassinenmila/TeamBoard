@@ -22,6 +22,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [AuthController::class, 'me']);
     Route::apiResource('taches', \App\Http\Controllers\Api\TacheController::class);
     Route::post('/taches/{tache}/assigner', [TacheController::class, 'assigner']);
-
+    Route::apiResource('users', \App\Http\Controllers\Api\UserController::class);
+    Route::apiResource('reunions', \App\Http\Controllers\Api\ReunionController::class);
+    Route::post('/reunions/{reunion}/inviter', [ReunionController::class, 'inviter']);
+    Route::apiResource('demandes', \App\Http\Controllers\Api\DemandeController::class);
 });
 
