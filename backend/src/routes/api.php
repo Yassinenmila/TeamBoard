@@ -9,12 +9,6 @@ use App\Http\Controllers\Api\ReunionController;
 use App\Http\Controllers\Api\DemandeController;
 
 
-Route::get('/test', function () {
-    return response()->json([
-        'message' => 'API fonctionne 🚀'
-    ]);
-});
-
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -25,6 +19,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', \App\Http\Controllers\Api\UserController::class);
     Route::apiResource('reunions', \App\Http\Controllers\Api\ReunionController::class);
     Route::post('/reunions/{reunion}/inviter', [ReunionController::class, 'inviter']);
-    Route::apiResource('demandes', \App\Http\Controllers\Api\DemandeController::class);
+    Route::apiResource('demandes', DemandeController::class);
 });
 
