@@ -81,6 +81,7 @@ const auth = useAuthStore()
 
 async function login() {
   try {
+    console.log("LOGIN START") // 👈 ajoute ça
     error.value = null
 
     await auth.login(email.value, password.value)
