@@ -43,7 +43,7 @@ class TacheController extends Controller
         $validated = $request->validate([
             'titre'=>'required|string',
             'description'=>'required|string',
-            'priorite'=>'required|string',
+            'status'=>'required|in:en cours,terminée,en attente',
             'date_limite'=>'required|date',
         ]);
 

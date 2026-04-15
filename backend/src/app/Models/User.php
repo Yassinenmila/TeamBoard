@@ -10,10 +10,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Tache;
+use App\Models\Demande;
+use App\Models\Presence;
+use App\Models\Reunion;
+use App\Models\Notification;
+use App\Models\Commentaire;
+use App\Models\Annonce;
 
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
+
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -40,6 +46,10 @@ class User extends Authenticatable
         ];
     }
 
+    public function reunionsCreees(){
+        return $this->hasMany(Reunion::class,'created_by');
+    }
+
     public function demandes(){
         return $this->hasMany(Demande::class);
     }
@@ -50,7 +60,7 @@ class User extends Authenticatable
 
     public function reunions(){
         return $this->belongsToMany(Reunion::class, 'invitations', 'user_id', 'reunion_id')
-                ->withPivot('statut')
+                ->withPivot('status')
                 ->withTimestamps();
     }
 
@@ -63,7 +73,7 @@ class User extends Authenticatable
     }
 
     public function tachesAssignes(){
-        return $this->hasMany(Tache::class,'affectations')->withPivot('status')->withTimestamps();
+        return $this->belongsToMany(Tache::class, 'affectations', 'user_id', 'tache_id')->withPivot('status')->withTimestamps();
     }
 
     public function livrables(){

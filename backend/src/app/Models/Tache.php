@@ -14,6 +14,7 @@ class Tache extends Model
         'description',
         'status',
         'date_limite',
+        'created_by'
     ];
 
     public function createur(){

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('titre');
             $table->text('description');
+            $table->enum('status', ['en cours', 'terminée', 'en attente'])->default('en cours');
             $table->dateTime('date_limite')->nullable();
             $table->ForeignId('created_by')->constrained('users')->cascadeOnDelete();
             $table->timestamps();

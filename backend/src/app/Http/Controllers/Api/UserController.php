@@ -31,18 +31,21 @@ class UserController extends Controller
         }
 
         $request->validate([
-            'name' => 'required|string',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string',
             'role' => 'required|in:admin,responsable,membre'
         ]);
 
         $user = User::create([
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role
         ]);
+
 
         return response()->json([
             'message' => 'Utilisateur créé avec succès',
@@ -59,7 +62,43 @@ class UserController extends Controller
             return response()->json(['message' => 'Non autorisé'], 403);
         }
 
-        return response()->json($user);
+        $user->load([
+            'tachesCrees',
+            'tachesAssignes',
+            'annonces',
+            'reunionsCreees',
+            'reunions'
+        ]);
+
+        return response()->json([
+            'id' => $user->id,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'email' => $user->email,
+            'role' => $user->role,
+
+            // COUNTS
+            'taches_creees_count' => $user->tachesCrees->count(),
+            'annonces_count' => $user->annonces->count(),
+            'reunions_creees_count' => $user->reunionsCreees->count(),
+            'taches_assignees_count' => $user->tachesAssignes->count(),
+            'reunions_invitations_count' => $user->reunions->count(),
+
+            // LISTES
+            'creations' => $user->tachesCrees->map(fn($t) => [
+                'id' => $t->id,
+                'title' => $t->titre,
+                'date' => $t->created_at->format('d M'),
+                'type' => 'tache'
+            ]),
+
+            'assignations' => $user->tachesAssignes->map(fn($t) => [
+                'id' => $t->id,
+                'title' => $t->titre,
+                'date' => $t->date_limite,
+                'type' => 'tache'
+            ]),
+        ]);
     }
 
     /**
@@ -75,13 +114,14 @@ class UserController extends Controller
         }
 
         $request->validate([
-            'name' => 'sometimes|string',
+            'first_name' => 'sometimes|string',
+            'last_name' => 'sometimes|string',
             'email' => 'sometimes|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6',
             'role' => 'sometimes|in:admin,responsable,membre'
         ]);
 
-        $data = $request->only(['name', 'email', 'role']);
+        $data = $request->only(['first_name', 'last_name', 'email', 'role']);
 
         // Hash password si fourni
         if ($request->filled('password')) {

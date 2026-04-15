@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->ForeignId('created_by')->constrained('users')->cascadeOnDelete();
             $table->text('description')->nullable();
-            $table->datetime('date');
+            $table->date('date');
+            $table->time('heure');
             $table->string('lieu');
             $table->timestamps();
         });
