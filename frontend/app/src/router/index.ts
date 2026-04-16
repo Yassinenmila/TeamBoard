@@ -12,6 +12,7 @@ import UserCreate from '@/views/admin/users/create.vue'
 import UserEdit from '@/views/admin/users/edit.vue'
 import Reunions from '@/views/admin/reunions/index.vue'
 import ReunionsCreate from '@/views/admin/reunions/create.vue'
+import ReunionsShow from '@/views/admin/reunions/show.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -66,8 +67,11 @@ const router = createRouter({
     {
       path:'/reunions/create',
       component:ReunionsCreate
+    },
+    {
+      path:'/reunions/:id',
+      component:ReunionsShow
     }
-
   ],
 })
 

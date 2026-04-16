@@ -49,6 +49,7 @@ class ReunionController extends Controller
             'titre' => 'required|string',
             'description' => 'nullable|string',
             'date' => 'required|date',
+            'heure' => 'required|date_format:H:i',
             'lieu' => 'nullable|string',
             'invitations' => 'nullable|array',
             'invitations.*' => 'exists:users,id'
@@ -59,6 +60,7 @@ class ReunionController extends Controller
             'titre' => $request->titre,
             'description' => $request->description,
             'date' => $request->date,
+            'heure' => $request->heure,
             'lieu' => $request->lieu,
         ]);
 
@@ -66,7 +68,7 @@ class ReunionController extends Controller
             foreach ($request->invitations as $inv_id) {
                 $reunion->invitations()->create([
                     'user_id' => $inv_id,
-                    'statut' => 'en_attente'
+                    'status' => 'pending'
                 ]);
 
                 // Créer une notification

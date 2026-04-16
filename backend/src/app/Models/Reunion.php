@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\User;
 use App\Models\Notification;
+use Illuminate\Validation\Rules\In;
 
 class Reunion extends Model
 {
@@ -16,19 +17,20 @@ class Reunion extends Model
         'titre',
         'description',
         'date',
+        'heure',
         'lieu',
     ];
 
     public function creator(){
-        return $this->belongsTo(User::class,'created_by');
+        return $this->belongsTo(User::class,'user_id');
     }
 
-    public function participants(){
-        return $this->belongsToMany(User::class,'invitations')->withPivot('status')->withTimestamps();
+    public function invitations(){
+        return $this->hasMany(Invitation::class,'reunion_id');
     }
 
     public function notifications(){
-        return $this->hasMany(Notification::class,'notifiable');
+        return $this->morphMany(Notification::class,'notifiable');
     }
 
 

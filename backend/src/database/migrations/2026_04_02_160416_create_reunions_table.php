@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('reunions', function (Blueprint $table) {
             $table->id();
-            $table->ForeignId('created_by')->constrained('users')->cascadeOnDelete();
+            $table->string('titre');
             $table->text('description')->nullable();
             $table->date('date');
             $table->time('heure');
             $table->string('lieu');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // créateur
             $table->timestamps();
         });
     }

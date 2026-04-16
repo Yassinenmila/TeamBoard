@@ -145,7 +145,7 @@ const form = ref({
   heure: '',
   lieu: '',
   description: '',
-  invites: [] // Array d'IDs d'utilisateurs
+  invitations: []
 });
 
 // Charger les utilisateurs pour la liste d'invitation
@@ -161,21 +161,22 @@ const fetchUsers = async () => {
 };
 
 const toggleInvite = (id) => {
-  const index = form.value.invites.indexOf(id);
+  const index = form.value.invitations.indexOf(id);
   if (index > -1) {
-    form.value.invites.splice(index, 1);
+    form.value.invitations.splice(index, 1);
   } else {
-    form.value.invites.push(id);
+    form.value.invitations.push(id);
   }
 };
 
-const isInvited = (id) => form.value.invites.includes(id);
+const isInvited = (id) => form.value.invitations.includes(id);
 
 const submitReunion = async () => {
   if (!form.value.titre || !form.value.date || !form.value.heure) {
     alert('Veuillez remplir les informations essentielles.');
     return;
   }
+  console.log("DATA ENVOYÉE:", form.value);
 
   try {
     loading.value = true;
@@ -186,6 +187,7 @@ const submitReunion = async () => {
     router.push('/admin/reunions');
   } catch (error) {
     console.error(error);
+    console.error(error.response?.data);
     alert('Erreur lors de la création.');
   } finally {
     loading.value = false;

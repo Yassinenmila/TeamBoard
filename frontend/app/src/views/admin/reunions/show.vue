@@ -60,7 +60,7 @@
               </div>
               <div>
                 <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest">Organisateur</p>
-                <p class="text-xs font-bold text-slate-900">{{ reunion.organisateur?.first_name }}</p>
+                <p class="text-xs font-bold text-slate-900">{{ reunion.creator?.first_name }}</p>
               </div>
             </div>
           </div>
@@ -70,21 +70,28 @@
               <section class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
                 <div class="flex items-center justify-between mb-8">
                   <h3 class="text-xs font-black text-slate-900 uppercase tracking-[0.3em]">Participants</h3>
-                  <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-lg">{{ reunion.invites?.length }}</span>
+                  <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-lg">{{ reunion.invitations?.length }}</span>
                 </div>
 
                 <div class="space-y-4">
-                  <div v-for="invite in reunion.invites" :key="invite.id" class="flex items-center justify-between group p-2 hover:bg-slate-50 rounded-2xl transition-all">
+                  <div v-for="invite in reunion.invitations || []" :key="invite.id" class="flex items-center justify-between group p-2 hover:bg-slate-50 rounded-2xl transition-all">
                     <div class="flex items-center gap-3">
-                      <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center text-[10px] font-black group-hover:bg-slate-900 group-hover:text-white transition-all">
-                        {{ invite.first_name[0] }}{{ invite.last_name[0] }}
+                      <!-- AVATAR -->
+                      <div class="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-[10px] font-black">
+                        {{ invite.user?.first_name?.[0] || '?' }}
+                        {{ invite.user?.last_name?.[0] || '' }}
                       </div>
+                      <!-- INFOS -->
                       <div>
-                        <p class="text-[11px] font-black text-slate-900 uppercase tracking-tight">{{ invite.first_name }} {{ invite.last_name }}</p>
-                        <p class="text-[9px] font-medium text-slate-400">{{ invite.role }}</p>
+                        <p class="text-[11px] font-black text-slate-900 uppercase tracking-tight">
+                          {{ invite.user?.first_name }} {{ invite.user?.last_name }}
+                        </p>
+
+                        <p class="text-[9px] font-medium text-slate-400">
+                          {{ invite.user?.role }}
+                        </p>
                       </div>
                     </div>
-                    <div class="w-1.5 h-1.5 rounded-full bg-slate-200"></div>
                   </div>
                 </div>
               </section>
@@ -158,3 +165,4 @@ onMounted(fetchReunion);
 .overflow-y-auto::-webkit-scrollbar { width: 4px; }
 .overflow-y-auto::-webkit-scrollbar-thumb { background: #f1f5f9; border-radius: 10px; }
 </style>
+// contact@matek-it.com

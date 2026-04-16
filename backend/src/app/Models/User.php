@@ -17,8 +17,7 @@ use App\Models\Reunion;
 use App\Models\Notification;
 use App\Models\Commentaire;
 use App\Models\Annonce;
-
-
+use Illuminate\Validation\Rules\In;
 
 class User extends Authenticatable
 {
@@ -47,7 +46,7 @@ class User extends Authenticatable
     }
 
     public function reunionsCreees(){
-        return $this->hasMany(Reunion::class,'created_by');
+        return $this->hasMany(Reunion::class,'user_id');
     }
 
     public function demandes(){
@@ -59,9 +58,7 @@ class User extends Authenticatable
     }
 
     public function reunions(){
-        return $this->belongsToMany(Reunion::class, 'invitations', 'user_id', 'reunion_id')
-                ->withPivot('status')
-                ->withTimestamps();
+        return $this->belongsToMany(Invitation::class);
     }
 
     public function notifications(){

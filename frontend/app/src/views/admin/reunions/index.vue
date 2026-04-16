@@ -9,7 +9,7 @@
           <h1 class="text-2xl font-black text-slate-900 tracking-tighter uppercase italic">Réunions & Briefings</h1>
         </div>
 
-        <router-link to="/reunions/create" class="bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] px-8 py-4 rounded-xl hover:bg-emerald-600 transition-all shadow-lg shadow-slate-900/10">
+        <router-link to="/reunions" class="bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] px-8 py-4 rounded-xl hover:bg-emerald-600 transition-all shadow-lg shadow-slate-900/10">
           + Planifier une session
         </router-link>
       </header>
@@ -48,28 +48,30 @@
               <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest mb-3">Participants invités</p>
               <div class="flex -space-x-3 overflow-hidden">
                 <div
-                  v-for="invite in reunion.invites.slice(0, 5)"
+                  v-for="invite in reunion.invitations.slice(0, 5)"
                   :key="invite.id"
                   class="inline-block h-10 w-10 rounded-xl ring-4 ring-white bg-slate-100 flex items-center justify-center text-[10px] font-black text-slate-600 uppercase border border-slate-200"
                   :title="invite.first_name + ' ' + invite.last_name"
                 >
-                  {{ invite.first_name[0] }}{{ invite.last_name[0] }}
+                  {{ invite.first_name ?? '' }}{{ invite.last_name ?? '' }}
                 </div>
-                <div v-if="reunion.invites.length > 5" class="inline-block h-10 w-10 rounded-xl ring-4 ring-white bg-emerald-50 text-emerald-600 flex items-center justify-center text-[10px] font-black">
-                  +{{ reunion.invites.length - 5 }}
+                <div v-if="reunion.invitations.length > 5" class="inline-block h-10 w-10 rounded-xl ring-4 ring-white bg-emerald-50 text-emerald-600 flex items-center justify-center text-[10px] font-black">
+                  +{{ reunion.invitations.length - 5 }}
                 </div>
               </div>
             </div>
 
             <div class="flex items-center gap-3 shrink-0">
               <router-link
-                :to="`/admin/reunions/${reunion.id}`"
+                :to="`/reunions/${reunion.id}`"
                 class="px-6 py-3 bg-slate-50 text-slate-900 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-900 hover:text-white transition-all"
               >
                 Rejoindre
               </router-link>
-              <button class="p-3 text-slate-300 hover:text-rose-500 transition-colors">
-                <span class="text-[10px] font-black uppercase tracking-widest italic">Annuler</span>
+              <button @click="deleteReunion(reunion.id)" class="p-3 text-slate-300 hover:text-rose-500 transition-colors">
+                <span class="text-[10px] font-black uppercase tracking-widest italic">
+                  Annuler
+                </span>
               </button>
             </div>
 
@@ -98,12 +100,33 @@ const fetchReunions = async () => {
     const res = await api.get('/reunions', {
       headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
     });
-    // On s'attend à recevoir : titre, date, heure, lieu, et le tableau 'invites'
+    console.log("RESPONSE API:", res.data);
+    // On s'attend à recevoir : titre, date, heure, lieu, et le tableau 'invitations'
     reunions.value = res.data;
   } catch (error) {
     console.error("Erreur chargement réunions:", error);
   } finally {
     loading.value = false;
+  }
+};
+
+const deleteReunion = async (id) => {
+  if (!confirm('Voulez-vous vraiment supprimer cette réunion ?')) return;
+
+  try {
+    await api.delete(`/reunions/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    });
+
+    // enlever de la liste sans reload
+    reunions.value = reunions.value.filter(r => r.id !== id);
+
+    alert('Réunion supprimée');
+  } catch (error) {
+    console.error(error);
+    alert('Erreur lors de la suppression');
   }
 };
 
