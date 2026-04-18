@@ -88,7 +88,7 @@ async function login() {
 
     console.log("✅ Connecté :", auth.user)
 
-    router.push("/")
+    router.push("/admin/dashboard")
 
   } catch (err) {
     error.value = "Email ou mot de passe incorrect"

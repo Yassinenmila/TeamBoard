@@ -111,12 +111,13 @@ class ReunionController extends Controller
             'titre' => 'sometimes|string',
             'description' => 'nullable|string',
             'date' => 'sometimes|date',
+            'heure' => 'sometimes|date_format:H:i:s',
             'lieu' => 'nullable|string',
             'invitations' => 'nullable|array',
             'invitations.*' => 'exists:users,id'
         ]);
 
-        $reunion->update($request->only(['titre', 'description', 'date', 'lieu']));
+        $reunion->update($request->only(['titre', 'description', 'date', 'heure', 'lieu']));
 
         // Mise à jour des invitations si fourni
         if ($request->invitations) {
@@ -125,7 +126,7 @@ class ReunionController extends Controller
             foreach ($request->invitations as $inv_id) {
                 $reunion->invitations()->create([
                     'user_id' => $inv_id,
-                    'statut' => 'en_attente'
+                    'status' => 'pending'
                 ]);
 
                 // Créer une notification

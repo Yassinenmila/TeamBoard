@@ -37,7 +37,7 @@ class AnnonceController extends Controller
         $request->validate([
             'titre' => 'required|string|max:255',
             'contenu' => 'required|string',
-            'type' => 'required|in:urgent,normal,important'
+            'type' => 'required|in:urgent,general'
         ]);
 
         $annonce = Annonce::create([
@@ -56,8 +56,9 @@ class AnnonceController extends Controller
         foreach ($users as $membre) {
             $membre->notifications()->create([
                 'message' => "Nouvelle annonce publiée : {$annonce->titre}",
-                'type' => 'Annonce',
-                'lu' => false
+                'lu' => false,
+                'notifiable_id' => $annonce->id,
+                'notifiable_type' => Annonce::class
             ]);
         }
 

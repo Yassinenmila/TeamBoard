@@ -22,6 +22,6 @@ class Annonce extends Model
     }
 
     public function notifications(){
-        return $this->hasMany(Notification::class,'notifiable');
+        return $this->morphMany(Notification::class,'notifiable');
     }
 }

@@ -10,9 +10,11 @@ class Demande extends Model
     use HasFactory;
 
     protected $fillable =[
+        'user_id',
         'type',
         'description',
         'status',
+        'date',
     ];
 
     public function commentaires(){

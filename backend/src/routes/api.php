@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\ReunionController;
 use App\Http\Controllers\Api\DemandeController;
 use App\Http\Controllers\Api\PresenceController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\AnnonceController;
 
 Route::get('/test', function () {
     return response()->json(['message' => bcrypt('password')]);
@@ -22,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('taches',TacheController::class);
     Route::post('/taches/{tache}/assigner', [TacheController::class, 'assigner']);
     Route::apiResource('users', UserController::class);
+    Route::apiResource('annonces', AnnonceController::class);
     Route::apiResource('reunions', \App\Http\Controllers\Api\ReunionController::class);
     Route::post('/reunions/{reunion}/inviter', [ReunionController::class, 'inviter']);
     Route::apiResource('demandes', DemandeController::class);

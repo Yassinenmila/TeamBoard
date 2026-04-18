@@ -36,6 +36,7 @@ class DemandeController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
             'type' => 'required|string',
             'description' => 'required|string',
@@ -48,7 +49,7 @@ class DemandeController extends Controller
             'user_id' => $user->id,
             'type' => $request->type,
             'description' => $request->description,
-            'statut' => 'en_attente',
+            'status' => 'pending',
             'date' => now()
         ]);
 
@@ -98,14 +99,17 @@ class DemandeController extends Controller
         /**
          * ADMIN / RESPONSABLE → traiter la demande
          */
-        if (in_array($user->role, ['admin', 'responsable'])|| $user->role === 'responsable' && $user->id !== $demande->user_id) {
-
+        if (in_array($user->role, ['admin', 'responsable'])) {
             $request->validate([
                 'statut' => 'required|in:en_attente,acceptee,refusee',
                 'message' => 'nullable|string'
             ]);
 
-            $data['statut'] = $request->statut;
+            $data['status'] = match ($request->statut) {
+                'en_attente' => 'pending',
+                'acceptee' => 'accepted',
+                'refusee' => 'rejected',
+            };
 
             // 🔔 notifier membre
             $demande->notifications()->create([
@@ -130,9 +134,8 @@ class DemandeController extends Controller
         /**
          * MEMBRE → modifier sa demande si en attente
          */
-        if ($user->id === $demande->user_id) {
-
-            if ($demande->statut !== 'en_attente') {
+        elseif ($user->id === $demande->user_id) {
+            if ($demande->status !== 'pending') {
                 return response()->json([
                     'message' => 'Vous ne pouvez plus modifier cette demande.'
                 ], 403);
@@ -153,9 +156,13 @@ class DemandeController extends Controller
             }
         }
 
-        if (!empty($data)) {
-            $demande->update($data);
+        if (empty($data)) {
+            return response()->json([
+                'message' => 'Non autorisé à modifier cette demande.'
+            ], 403);
         }
+
+        $demande->update($data);
 
         return response()->json([
             'message' => 'Demande mise à jour',

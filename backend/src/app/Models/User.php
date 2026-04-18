@@ -57,8 +57,14 @@ class User extends Authenticatable
         return $this->hasMany(Presence::class);
     }
 
+    public function invitations(){
+        return $this->hasMany(Invitation::class);
+    }
+
     public function reunions(){
-        return $this->belongsToMany(Invitation::class);
+        return $this->belongsToMany(Reunion::class, 'invitations', 'user_id', 'reunion_id')
+                    ->withPivot('status')
+                    ->withTimestamps();
     }
 
     public function notifications(){

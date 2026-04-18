@@ -76,12 +76,11 @@ class TacheController extends Controller
             return response()->json(['message'=>'Non autorisé'], 403);
         }
 
-        $validated = $request->validate([
+            $validated = $request->validate([
             'titre' => 'sometimes|string',
             'description' => 'sometimes|string',
-            'priorite' => 'sometimes|string',
-            'date_limite' => 'sometimes|date',
-            'statut' => 'sometimes|string'
+            'status' => 'sometimes|in:en cours,terminée,en attente',
+            'date_limite' => 'sometimes|date'
         ]);
 
         $tache->update($validated);
@@ -117,7 +116,7 @@ class TacheController extends Controller
         ]);
 
         $tache = Tache::findOrFail($id);
-        $tache->utilisateurs()->syncWithoutDetaching($request->user_ids);
+        $tache->utilisateurs()->sync($request->user_ids);
 
         // Notifier chaque utilisateur assigné
         foreach ($request->user_ids as $user_id) {
