@@ -18,7 +18,7 @@
               class="bg-slate-50 border-none rounded-xl px-6 py-3 text-xs font-bold w-72 focus:ring-1 focus:ring-emerald-500 transition-all placeholder:text-slate-300"
             >
           </div>
-          <router-link to="/users/create" class="bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] px-8 py-4 rounded-xl hover:bg-emerald-600 transition-all shadow-lg shadow-slate-900/10">
+          <router-link to="/admin/users/create" class="bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] px-8 py-4 rounded-xl hover:bg-emerald-600 transition-all shadow-lg shadow-slate-900/10">
             + Ajouter un utilisateur
           </router-link>
         </div>

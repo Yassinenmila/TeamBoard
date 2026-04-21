@@ -19,7 +19,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/profile', [AuthController::class, 'me']);
+    Route::get('/me', [AuthController::class, 'me']);
     Route::apiResource('taches',TacheController::class);
     Route::post('/taches/{tache}/assigner', [TacheController::class, 'assigner']);
     Route::apiResource('users', UserController::class);
