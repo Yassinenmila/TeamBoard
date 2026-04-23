@@ -94,7 +94,7 @@
     <div class="mt-auto border-t border-slate-100 pt-8">
       <div class="flex items-center gap-4 px-2">
         <div class="w-10 h-10 bg-slate-50 text-slate-900 rounded-2xl flex items-center justify-center font-black text-sm italic border border-slate-100 shadow-sm">
-          {{ userAvatar }}
+          {{ user.first_name[0] }}{{ user.last_name[0] }}
         </div>
         <div class="overflow-hidden">
           <p class="font-bold text-sm text-slate-900 truncate italic tracking-tighter">{{ userName }} {{ userlast_name }}</p>

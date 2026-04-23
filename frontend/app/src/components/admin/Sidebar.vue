@@ -81,10 +81,10 @@
     <div class="mt-auto border-t border-slate-100 pt-8">
       <div class="flex items-center gap-4 px-2">
         <div class="w-10 h-10 bg-slate-900 text-emerald-400 rounded-2xl flex items-center justify-center font-black text-sm shadow-lg shadow-slate-200 italic">
-          Y
+          {{ user?.first_name[0] }}{{ user?.last_name[0] }}
         </div>
         <div class="overflow-hidden">
-          <p class="font-bold text-sm text-slate-900 truncate italic tracking-tighter">Yassine B.</p>
+          <p class="font-bold text-sm text-slate-900 truncate italic tracking-tighter">{{ user?.first_name }} {{ user?.last_name }}</p>
           <p class="text-[10px] font-black text-emerald-600 uppercase tracking-[0.2em] italic">Super Admin</p>
         </div>
       </div>
@@ -108,6 +108,7 @@ import api from '@/services/api';
 
 const router = useRouter();
 const auth = useAuthStore();
+const user = computed(()=> auth.user || null )
 const isNotifOpen = ref(false);
 const notifications = ref([]);
 

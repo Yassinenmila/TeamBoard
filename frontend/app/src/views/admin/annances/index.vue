@@ -54,9 +54,9 @@
             <div class="flex items-center justify-between pt-6 border-t border-slate-50">
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-[10px] font-black text-slate-400 border border-slate-100">
-                  {{ annonce.user?.name ? annonce.user.name[0] : 'A' }}
+                  {{ annonce.user?.first_name ? annonce.user.last_name[0] : 'A' }}
                 </div>
-                <span class="text-[10px] font-black text-slate-900 uppercase italic">{{ annonce.user?.name || 'Admin' }}</span>
+                <span class="text-[10px] font-black text-slate-900 uppercase italic">{{ annonce.user?.first_name || 'Admin' }} {{ annonce.user?.last_name || 'Admin' }}</span>
               </div>
 
               <div class="flex gap-2">

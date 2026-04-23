@@ -43,12 +43,6 @@ Demande <|-- DemandePoste
 Demande <|-- DemandeTemps
 Demande <|-- DemandeContrat
 
-class NoteInterne {
-    -id: int
-    -contenu: text
-    -date: DateTime
-}
-
 ' ===== Tâches =====
 class Tache {
     -id: int
@@ -61,13 +55,6 @@ class Tache {
 
 class Affectation {
     -id: int
-}
-
-class Livrable {
-    -id: int
-    -type: string
-    -url: string
-    -date: DateTime
 }
 
 ' ===== Commentaire =====
@@ -105,26 +92,6 @@ class Invitation {
     -statut: string
 }
 
-' ===== Feedback =====
-class Feedback {
-    -id: int
-    -titre: string
-    -description: text
-    -date: DateTime
-}
-
-class ReponseFeedback {
-    -id: int
-    -contenu: text
-}
-
-' ===== Présence =====
-class Presence {
-    -id: int
-    -date: Date
-    -etat: string
-}
-
 ' ===== Notification (Abstraction) =====
 abstract class Notification {
     -id: int
@@ -143,14 +110,10 @@ Notification <|-- NotifReunion
 
 ' ===== Relations =====
 Utilisateur "1" --> "*" Demande : crée
-Demande "1" --> "*" NoteInterne : contient
 
 Utilisateur "1" --> "*" Tache : crée
 Tache "1" --> "*" Affectation
 Utilisateur "1" --> "*" Affectation
-
-Tache "1" --> "*" Livrable
-Utilisateur "1" --> "*" Livrable : soumet
 
 Tache "1" --> "*" Commentaire
 Demande "1" --> "*" Commentaire
@@ -162,11 +125,6 @@ Utilisateur "1" --> "*" Reunion : crée
 Reunion "1" --> "*" Invitation
 Utilisateur "1" --> "*" Invitation
 
-Utilisateur "1" --> "*" Feedback : crée
-Feedback "1" --> "*" ReponseFeedback
-Utilisateur "1" --> "*" ReponseFeedback
-
-Utilisateur "1" --> "*" Presence
 
 Utilisateur "1" --> "*" Notification
 
