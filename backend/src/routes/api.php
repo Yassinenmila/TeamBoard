@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\DemandeController;
 use App\Http\Controllers\Api\PresenceController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\AnnonceController;
+use App\Http\Controllers\Api\LivrableController;
 
 Route::get('/test', function () {
     return response()->json(['message' => bcrypt('password')]);
@@ -18,8 +19,14 @@ Route::get('/test', function () {
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/taches/{id}/livrable', function ($id) {
+        return \App\Models\Livrable::where('tache_id', $id)
+            ->latest()
+            ->first();
+        });
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::apiResource('liverables', LivrableController::class);
     Route::apiResource('taches',TacheController::class);
     Route::post('/taches/{tache}/assigner', [TacheController::class, 'assigner']);
     Route::apiResource('users', UserController::class);

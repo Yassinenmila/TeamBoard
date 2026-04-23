@@ -13,18 +13,16 @@ class TacheController extends Controller
         $user = $request->user();
 
         if ($user->role === 'admin') {
-            $taches = Tache::with(['createur','utilisateurs','livrables','commentaires'])->get();
+            $taches = Tache::with(['createur','utilisateurs','commentaires'])->get();
         }
 
         elseif ($user->role === 'responsable') {
-            $taches = Tache::with(['createur','utilisateurs','livrables','commentaires'])
-                ->whereHas('createur', function($q){
-                    $q->where('role','responsable');
-                })->get();
+            $taches = Tache::with(['createur','utilisateurs','commentaires'])
+                ->where('created_by', $user->id)
+                ->get();
         }
-
         elseif ($user->role === 'membre') {
-            $taches = $user->tachesAssignes()->with(['createur','utilisateurs','livrables','commentaires'])->get();
+            $taches = $user->tachesAssignes()->with(['createur','utilisateurs','commentaires'])->get();
         }
 
         else {
@@ -60,7 +58,7 @@ class TacheController extends Controller
      */
     public function show(string $id)
     {
-        $tache = Tache::with(['createur','utilisateurs','livrables','commentaires'])->findOrFail($id);
+        $tache = Tache::with(['createur','utilisateurs','commentaires'])->findOrFail($id);
         return response()->json($tache);
     }
 

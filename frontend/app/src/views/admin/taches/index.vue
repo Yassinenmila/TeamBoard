@@ -11,7 +11,7 @@
 
         <div class="flex items-center gap-6">
           <router-link
-            to="/taches/create"
+            to="/admin/taches/create"
             class="bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] px-8 py-4 rounded-xl hover:bg-emerald-600 transition-all shadow-lg shadow-slate-900/10 active:scale-95"
           >
             + Nouvelle Tâche
@@ -77,13 +77,13 @@
 
               <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <router-link
-                  :to="`/taches/${tache.id}`"
+                  :to="`/admin/taches/${tache.id}`"
                   class="p-3 bg-slate-50 hover:bg-slate-900 hover:text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all"
                 >
                   Détails
                 </router-link>
                 <router-link
-                  :to="`/taches/edit/${tache.id}`"
+                  :to="`/admin/taches/edit/${tache.id}`"
                   class="p-3 bg-slate-50 hover:bg-emerald-600 hover:text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all"
                 >
                   Éditer

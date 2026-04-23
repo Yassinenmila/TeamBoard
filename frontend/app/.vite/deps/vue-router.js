@@ -3115,7 +3115,7 @@ var require_speakingurl$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => 
 		* @param   {string} input string
 		*/
 		var escapeChars = function escapeChars(input) {
-			return input.replace(/[-\\^$*+?.()|[\]{}\/]/g, "\\$&");
+			return input.replace(/[-\\^$*+?.()|[\]{}/]/g, "\\$&");
 		};
 		/**
 		* check if the char is an already converted char from custom list
@@ -4059,7 +4059,7 @@ function normalizeBase(base) {
 	if (!base) if (isBrowser$1) {
 		const baseEl = document.querySelector("base");
 		base = baseEl && baseEl.getAttribute("href") || "/";
-		base = base.replace(/^\w+:\/\/[^\/]+/, "");
+		base = base.replace(/^\w+:\/\/[^/]+/, "");
 	} else base = "/";
 	if (base[0] !== "/" && base[0] !== "#") base = "/" + base;
 	return removeTrailingSlash(base);

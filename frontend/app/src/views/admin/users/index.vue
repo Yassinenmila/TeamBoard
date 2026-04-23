@@ -85,7 +85,7 @@
 
                     <td class="px-8 py-6 text-right space-x-2">
                       <router-link
-                        :to="`/users/edit/${user.id}`"
+                        :to="`/admin/users/edit/${user.id}`"
                         @click.stop
                         class="text-[10px] font-black text-slate-400 hover:text-slate-900 uppercase tracking-widest transition-colors px-2"
                       >

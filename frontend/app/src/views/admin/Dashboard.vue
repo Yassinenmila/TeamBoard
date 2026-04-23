@@ -14,7 +14,7 @@
             Aujourd'hui, {{ currentDate }}
           </div>
           <router-link
-            to="/taches/create"
+            to="/admin/taches/create"
             class="flex items-center gap-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-2xl shadow-lg shadow-emerald-500/20 transition-all text-sm uppercase tracking-tight active:scale-95"
           >
             + Nouvelle Tâche
@@ -53,7 +53,7 @@
                 Voir tout
               </button>
               <router-link
-                to="/taches/create"
+                to="/admin/taches/create"
                 class="text-[11px] font-black text-white uppercase tracking-widest bg-slate-900 hover:bg-emerald-600 transition-all px-6 py-2.5 rounded-xl shadow-lg shadow-slate-900/10 active:scale-95"
               >
                 + Ajouter une tâche
@@ -65,7 +65,7 @@
             <router-link
               v-for="project in projects"
               :key="project.id"
-              :to="`/taches/${project.id}`"
+              :to="`/admin/taches/${project.id}`"
               class="p-6 rounded-2xl bg-slate-50 border border-transparent hover:border-emerald-100 hover:bg-white transition-all flex items-center justify-between group"
             >
               <div class="flex items-center gap-5">

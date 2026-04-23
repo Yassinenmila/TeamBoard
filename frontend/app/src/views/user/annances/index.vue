@@ -1,0 +1,148 @@
+<template>
+  <div class="flex min-h-screen bg-[#f8fafb] text-slate-900">
+    <Sidebar />
+
+    <main class="flex-1 overflow-y-auto custom-scroll">
+      <div class="max-w-6xl mx-auto px-8 py-16">
+
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+          <div>
+            <div class="flex items-center gap-3 mb-4">
+              <span class="h-[2px] w-12 bg-indigo-500"></span>
+              <p class="text-[10px] font-black text-indigo-600 uppercase tracking-[0.5em] italic">
+                Communication & Flux
+              </p>
+            </div>
+            <h1 class="text-5xl font-black text-slate-900 tracking-tighter uppercase italic leading-none">
+              Tableau des <br/> Annonces
+            </h1>
+          </div>
+
+          <div v-if="userRole === 'responsable'">
+            <router-link
+              to="/user/annonces/create"
+              class="group bg-slate-900 text-white px-8 py-5 rounded-[2rem] text-[10px] font-black uppercase tracking-widest hover:bg-indigo-600 transition-all shadow-xl shadow-slate-900/10 flex items-center gap-4"
+            >
+              <span>Diffuser une annonce</span>
+              <span class="bg-white/20 w-6 h-6 rounded-full flex items-center justify-center group-hover:rotate-90 transition-transform">+</span>
+            </router-link>
+          </div>
+        </div>
+
+        <div v-if="loading" class="py-20 text-center animate-pulse">
+          <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em]">Chargement du flux...</p>
+        </div>
+
+        <div v-else class="grid grid-cols-1 gap-6">
+          <div
+            v-for="annonce in annonces"
+            :key="annonce.id"
+            class="group bg-white rounded-[2.5rem] border border-slate-100 p-8 hover:shadow-2xl transition-all duration-500 relative"
+          >
+            <div class="flex flex-col lg:flex-row justify-between gap-8">
+
+              <div class="flex-1 space-y-4">
+                <div class="flex items-center gap-4">
+                  <span class="text-[9px] font-black px-4 py-1 bg-indigo-50 text-indigo-600 rounded-full uppercase tracking-widest">
+                    {{ formatDate(annonce.created_at) }}
+                  </span>
+                  <span class="text-[9px] font-black text-slate-300 uppercase italic">
+                    Publié par <span class="text-slate-600 underline decoration-indigo-200">{{ annonce.user?.name }}</span>
+                  </span>
+                </div>
+
+                <h3 class="text-2xl font-black text-slate-800 uppercase italic group-hover:text-indigo-600 transition-colors">
+                  {{ annonce.titre }}
+                </h3>
+
+                <p class="text-sm text-slate-500 font-medium leading-relaxed italic whitespace-pre-line max-w-4xl">
+                  {{ annonce.description }}
+                </p>
+              </div>
+
+              <div v-if="canManage(annonce)" class="flex lg:flex-col items-center justify-end gap-3 border-l border-slate-50 pl-8">
+                <router-link
+                  :to="`/admin/annonces/${annonce.id}/edit`"
+                  class="w-full text-center px-6 py-3 bg-slate-50 hover:bg-slate-900 hover:text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all"
+                >
+                  Modifier
+                </router-link>
+
+                <button
+                  @click="deleteAnnonce(annonce.id)"
+                  class="w-full text-center px-6 py-3 text-rose-500 hover:bg-rose-50 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all"
+                >
+                  Supprimer
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <div v-if="annonces.length === 0" class="py-32 text-center bg-white rounded-[3rem] border-4 border-dashed border-slate-50">
+            <h2 class="text-xl font-black text-slate-200 uppercase italic tracking-widest">Aucune annonce disponible</h2>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted, computed } from 'vue'
+import Sidebar from '@/components/users/Sidebar.vue'
+import api from '@/services/api'
+import { useAuthStore } from '@/stores/auth'
+
+const auth = useAuthStore()
+const annonces = ref([])
+const loading = ref(true)
+
+// Rôle de l'utilisateur
+const userRole = computed(() => auth.user?.role)
+
+/**
+ * Vérifie si l'utilisateur peut modifier/supprimer cette annonce spécifique
+ * Règle : Doit être responsable ET être l'auteur de l'annonce
+ */
+const canManage = (annonce) => {
+  return userRole.value === 'responsable' && annonce.user_id === auth.user?.id
+}
+
+const fetchAnnonces = async () => {
+  try {
+    loading.value = true
+    const res = await api.get('/annonces')
+    annonces.value = res.data
+  } catch (e) {
+    console.error(e)
+  } finally {
+    loading.value = false
+  }
+}
+
+const deleteAnnonce = async (id) => {
+  if (!confirm('Confirmer la suppression ?')) return
+  try {
+    await api.delete(`/annonces/${id}`)
+    annonces.value = annonces.value.filter(a => a.id !== id)
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+const formatDate = (date) => {
+  return new Date(date).toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+  })
+}
+
+onMounted(fetchAnnonces)
+</script>
+
+<style scoped>
+.custom-scroll::-webkit-scrollbar { width: 5px; }
+.custom-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+</style>

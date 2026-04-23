@@ -15,7 +15,7 @@
           </button>
           <router-link
             v-if="tache"
-            :to="`/taches/edit/${tache.id}`"
+            :to="`/admin/taches/edit/${tache.id}`"
             class="bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] px-8 py-4 rounded-xl hover:bg-emerald-600 transition-all shadow-lg shadow-slate-900/10"
           >
             Modifier / Évaluer

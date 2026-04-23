@@ -1,15 +1,17 @@
 import axios from "axios"
+import { useAuthStore } from "@/stores/auth"
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/api", // ton backend Laravel
+  baseURL: "http://localhost:8000/api",
   withCredentials: true
 })
 
+// 🔥 INTERCEPTOR IMPORTANT
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token")
+  const auth = useAuthStore()
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+  if (auth.token) {
+    config.headers.Authorization = `Bearer ${auth.token}`
   }
 
   return config

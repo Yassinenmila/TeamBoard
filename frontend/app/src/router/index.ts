@@ -6,7 +6,6 @@ const LoginView = () => import('@/views/LoginView.vue')
 
 // ================= USER =================
 const UserDashboard = () => import('@/views/user/dashboard.vue')
-const UserProfile = () => import('@/views/user/profile.vue')
 
 // ================= ADMIN =================
 const AdminDashboard = () => import('@/views/admin/Dashboard.vue')
@@ -65,25 +64,57 @@ const router = createRouter({
           component: UserDashboard
         },
         {
-          path: 'profile',
-          name: 'user.profile',
-          component: UserProfile
-        },
-        {
           path: 'taches',
           name: 'user.taches',
-          component: () => import('@/views/user/taches.vue')
+          component: () => import('@/views/user/taches/index.vue')
+        },
+        {
+          path: 'taches/:id',
+          name: 'user.taches.show',
+          component: () => import('@/views/user/taches/show.vue')
         },
         {
           path: 'reunions',
           name: 'user.reunions',
-          component: () => import('@/views/user/reunions.vue')
+          component: () => import('@/views/user/reunions/index.vue')
+        },
+        {
+          path: 'reunions/:id',
+          name: 'user.reunions.show',
+          component: () => import('@/views/user/reunions/show.vue')
         },
         {
           path: 'demandes',
           name: 'user.demandes',
-          component: () => import('@/views/user/demandes.vue'),
+          component: () => import('@/views/user/demandes/index.vue'),
           meta: { roles: ['membre'] }
+        },
+        {
+          path: 'demandes/create',
+          name: 'user.demandes.create',
+          component: () => import('@/views/user/demandes/create.vue'),
+          meta: { roles: ['membre'] }
+        },
+        {
+          path:'notifications',
+          name: 'user.notifications',
+          component: () => import('@/views/user/notifications/index.vue')
+        },
+        {
+          path:'annances',
+          name: 'user.annances',
+          component: () => import('@/views/user/annances/index.vue')
+        },
+        {
+          path:'annances/:id',
+          name: 'user.annances.show',
+          component: () => import('@/views/user/annances/show.vue')
+        },
+        {
+          path:"annances/create",
+          name: 'user.annances.create',
+          component: () => import('@/views/user/annances/create.vue'),
+          meta: { roles: ['responsable'] }
         }
       ]
     },

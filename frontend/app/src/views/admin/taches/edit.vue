@@ -47,16 +47,6 @@
                 <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 italic">Description</label>
                 <textarea v-model="form.description" rows="5" class="w-full bg-slate-50 border-none rounded-[2rem] p-6 text-sm font-bold text-slate-900 focus:ring-1 focus:ring-emerald-500 italic"></textarea>
               </div>
-
-              <div class="pt-8 border-t border-slate-50">
-                <label class="block text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-4 italic">Lien de livraison (Livrable)</label>
-                <input
-                  v-model="form.livrable_url"
-                  type="url"
-                  placeholder="L'utilisateur doit coller son lien ici..."
-                  class="w-full bg-slate-900 text-emerald-400 border-none rounded-2xl p-5 text-xs font-mono"
-                >
-              </div>
             </div>
           </div>
 
@@ -75,44 +65,6 @@
                 <label class="block text-[9px] font-black text-slate-300 uppercase tracking-widest mb-3">Deadline</label>
                 <input v-model="form.date_limite" type="date" class="w-full bg-slate-50 border-none rounded-xl py-4 px-4 text-[10px] font-black text-slate-900">
               </div>
-            </div>
-
-            <div class="relative overflow-hidden bg-slate-900 p-8 rounded-[2.5rem] shadow-2xl shadow-slate-900/20 text-white space-y-6">
-
-              <div v-if="!form.livrable_url" class="absolute inset-0 bg-slate-900/80 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center p-8 text-center">
-                <span class="text-2xl mb-4">🔒</span>
-                <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 leading-relaxed">
-                  L'évaluation est bloquée tant qu'aucun livrable n'a été fourni.
-                </p>
-              </div>
-
-              <h3 class="text-[10px] font-black text-emerald-400 uppercase tracking-[0.4em] italic">Revue Administrative</h3>
-
-              <div class="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  @click="form.validation = 'validee'"
-                  :class="form.validation === 'validee' ? 'bg-emerald-600 border-emerald-400' : 'bg-slate-800 border-transparent text-slate-500'"
-                  class="py-4 rounded-xl text-[9px] font-black uppercase border transition-all"
-                >
-                  Accepter ✅
-                </button>
-                <button
-                  type="button"
-                  @click="form.validation = 'rejetee'"
-                  :class="form.validation === 'rejetee' ? 'bg-rose-600 border-rose-400' : 'bg-slate-800 border-transparent text-slate-500'"
-                  class="py-4 rounded-xl text-[9px] font-black uppercase border transition-all"
-                >
-                  Refuser ❌
-                </button>
-              </div>
-
-              <textarea
-                v-model="form.commentaire_admin"
-                rows="4"
-                placeholder="Votre feedback..."
-                class="w-full bg-slate-800 border-none rounded-2xl p-4 text-xs font-bold text-white italic"
-              ></textarea>
             </div>
 
           </div>
@@ -140,18 +92,15 @@ const form = ref({
   status: '',
   date_limite: '',
   user_id: '',
-  livrable_url: '',
   validation: '',
   commentaire_admin: ''
 });
 
 const fetchData = async () => {
   try {
-    // 1. Charger la liste des utilisateurs pour l'assignation
     const usersRes = await api.get('/users');
     users.value = usersRes.data;
 
-    // 2. Charger la tâche
     const taskRes = await api.get(`/taches/${route.params.id}`);
     const data = taskRes.data;
 
@@ -161,7 +110,6 @@ const fetchData = async () => {
       status: data.status,
       date_limite: data.date_limite,
       user_id: data.utilisateurs?.[0]?.id || '',
-      livrable_url: data.livrable_url || '',
       validation: data.validation || '',
       commentaire_admin: data.commentaire_admin || ''
     };
@@ -180,7 +128,6 @@ const updateTask = async () => {
       description: form.value.description,
       status: form.value.status,
       date_limite: form.value.date_limite,
-      livrable_url: form.value.livrable_url,
       validation: form.value.validation,
       commentaire_admin: form.value.commentaire_admin
     };
