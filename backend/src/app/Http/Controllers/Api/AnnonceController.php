@@ -97,7 +97,7 @@ class AnnonceController extends Controller
         $request->validate([
             'titre' => 'sometimes|string|max:255',
             'contenu' => 'sometimes|string',
-            'type' => 'sometimes|in:urgent,normal,important'
+            'type' => 'sometimes|in:urgent,general'
         ]);
 
         $annonce->update(

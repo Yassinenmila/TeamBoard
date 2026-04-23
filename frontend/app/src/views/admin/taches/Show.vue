@@ -38,38 +38,6 @@
                 {{ tache.description }}
               </p>
             </div>
-
-            <div v-if="tache.livrable_url" class="bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl">
-              <div class="p-10 border-b border-white/5">
-                <label class="block text-[10px] font-black text-emerald-400 uppercase tracking-[0.3em] mb-4 italic">Livrable soumis</label>
-                <div class="flex items-center justify-between bg-white/5 p-6 rounded-2xl border border-white/10">
-                  <span class="text-xs font-mono text-white truncate mr-4">{{ tache.livrable_url }}</span>
-                  <a :href="tache.livrable_url" target="_blank" class="px-6 py-2 bg-emerald-500 text-white text-[9px] font-black uppercase rounded-lg hover:bg-emerald-400 transition-colors">Vérifier le lien</a>
-                </div>
-              </div>
-
-              <div v-if="tache.validation" class="p-10 bg-white/5">
-                <div class="flex items-center gap-4 mb-4">
-                  <span :class="tache.validation === 'validee' ? 'text-emerald-400' : 'text-rose-400'" class="text-[10px] font-black uppercase tracking-widest italic">
-                    {{ tache.validation === 'validee' ? '● Mission Validée' : '● Mission Rejetée' }}
-                  </span>
-                </div>
-                <p class="text-sm text-slate-400 font-bold italic leading-relaxed">
-                  " {{ tache.commentaire_admin || 'Pas de commentaire additionnel.' }} "
-                </p>
-              </div>
-            </div>
-
-            <div class="space-y-6">
-              <h3 class="text-xs font-black text-slate-900 uppercase tracking-[0.3em] px-4 italic italic">Discussion Interne</h3>
-              <div v-for="com in tache.commentaires" :key="com.id" class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm transition-all hover:shadow-md">
-                <div class="flex justify-between items-start mb-2">
-                  <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest italic">{{ com.user?.first_name }} {{ com.user?.last_name }}</span>
-                  <span class="text-[9px] font-bold text-slate-300 uppercase">{{ formatDate(com.created_at) }}</span>
-                </div>
-                <p class="text-sm text-slate-500 font-medium">{{ com.contenu }}</p>
-              </div>
-            </div>
           </div>
 
           <div class="col-span-12 lg:col-span-4 space-y-8">

@@ -13,9 +13,6 @@
           <div v-if="!fetching" class="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
             <div class="space-y-4">
               <div class="flex items-center gap-3">
-                <span :class="statusBg(tache.status)" class="px-5 py-2 text-white text-[9px] font-black uppercase tracking-widest rounded-full italic shadow-lg">
-                  {{ tache.status }}
-                </span>
                 <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest italic">Mission Ref. #{{ tache.id }}</span>
               </div>
               <h1 class="text-6xl font-black text-slate-900 tracking-tighter uppercase italic leading-none">
@@ -41,14 +38,6 @@
                 {{ tache.description }}
               </p>
             </div>
-
-            <div v-if="tache.commentaire_admin" class="bg-slate-900 p-10 rounded-[3rem] text-white relative shadow-2xl shadow-slate-900/20">
-              <div class="absolute top-6 right-10 text-4xl opacity-20">💬</div>
-              <h3 class="text-[10px] font-black text-emerald-400 uppercase tracking-[0.4em] mb-4 italic">Instructions & Notes</h3>
-              <p class="text-sm font-bold italic leading-relaxed text-slate-300 border-l-2 border-emerald-500 pl-6">
-                "{{ tache.commentaire_admin }}"
-              </p>
-            </div>
           </div>
 
           <div class="col-span-12 lg:col-span-4 space-y-6">
@@ -67,10 +56,10 @@
               <div class="space-y-4">
                 <div v-for="user in (tache.utilisateurs || [])" :key="user.id" class="flex items-center gap-4 group">
                   <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center font-black text-slate-600 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300 shadow-inner uppercase">
-                    {{ user.name?.charAt(0) }}
+                    {{ user.first_name?.charAt(0) }}{{ user.last_name?.charAt(0) }}
                   </div>
                   <div>
-                    <p class="text-xs font-black text-slate-900 uppercase italic">{{ user.name }}</p>
+                    <p class="text-xs font-black text-slate-900 uppercase italic">{{ user.first_name }} {{ user.last_name }}</p>
                     <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ user.role }}</p>
                   </div>
                 </div>

@@ -101,22 +101,22 @@ class DemandeController extends Controller
          */
         if (in_array($user->role, ['admin', 'responsable'])) {
             $request->validate([
-                'statut' => 'required|in:en_attente,acceptee,refusee',
+                'statut' => 'required|in:pending,accepted,rejected',
                 'message' => 'nullable|string'
             ]);
 
             $data['status'] = match ($request->statut) {
-                'en_attente' => 'pending',
-                'acceptee' => 'accepted',
-                'refusee' => 'rejected',
+                'accepted' => 'accepted',
+                'rejected' => 'rejected',
+                default => 'pending'
             };
 
             // 🔔 notifier membre
             $demande->notifications()->create([
                 'user_id' => $demande->user_id,
                 'message' => match ($request->statut) {
-                    'acceptee' => "Votre demande a été acceptée ✅",
-                    'refusee' => "Votre demande a été refusée ❌",
+                    'accepted' => "Votre demande a été acceptée ✅",
+                    'rejected' => "Votre demande a été refusée ❌",
                     default => "Votre demande est en cours de traitement"
                 },
                 'lu' => false
@@ -192,4 +192,56 @@ class DemandeController extends Controller
             'message' => 'Demande supprimée avec succès'
         ]);
     }
+
+    public function traiter(Demande $demande, Request $request)
+{
+    $user = $request->user();
+
+    // 🔒 Autorisation
+    if (!in_array($user->role, ['admin', 'responsable'])) {
+        return response()->json([
+            'message' => 'Non autorisé'
+        ], 403);
+    }
+
+    // ✅ Validation
+    $request->validate([
+        'statut' => 'required|in:accepted,rejected',
+        'message' => 'nullable|string'
+    ]);
+
+    // ❌ Déjà traitée ?
+    if ($demande->status !== 'pending') {
+        return response()->json([
+            'message' => 'Cette demande a déjà été traitée.'
+        ], 400);
+    }
+
+    // 🔄 Mise à jour statut
+    $demande->update([
+        'status' => $request->statut
+    ]);
+
+    // 🔔 Notification au membre
+    $demande->notifications()->create([
+        'user_id' => $demande->user_id,
+        'message' => $request->statut === 'accepted'
+            ? "Votre demande a été acceptée ✅"
+            : "Votre demande a été refusée ❌",
+        'lu' => false
+    ]);
+
+    // 💬 Ajouter commentaire (optionnel)
+    if ($request->message) {
+        $demande->commentaires()->create([
+            'user_id' => $user->id,
+            'contenu' => $request->message
+        ]);
+    }
+
+    return response()->json([
+        'message' => 'Demande traitée avec succès',
+        'demande' => $demande->load('commentaires.user')
+    ]);
+}
 }

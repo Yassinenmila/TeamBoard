@@ -90,6 +90,12 @@ const router = createRouter({
           meta: { roles: ['membre'] }
         },
         {
+          path: 'demandes/:id',
+          name: 'user.demandes.show',
+          component: () => import('@/views/user/demandes/show.vue'),
+          meta: { roles: ['membre'] }
+        },
+        {
           path: 'demandes/create',
           name: 'user.demandes.create',
           component: () => import('@/views/user/demandes/create.vue'),
@@ -111,9 +117,15 @@ const router = createRouter({
           component: () => import('@/views/user/annances/show.vue')
         },
         {
-          path:"annances/create",
+          path:'annances/create',
           name: 'user.annances.create',
           component: () => import('@/views/user/annances/create.vue'),
+          meta: { roles: ['responsable'] }
+        },
+        {
+          path:'annances/edit/:id',
+          name: 'user.annances.edit',
+          component: () => import('@/views/user/annances/edit.vue'),
           meta: { roles: ['responsable'] }
         }
       ]

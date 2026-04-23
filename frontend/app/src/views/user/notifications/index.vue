@@ -92,7 +92,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import Sidebar from '@/components/admin/Sidebar.vue';
+import Sidebar from '@/components/users/Sidebar.vue';
 import api from '@/services/api';
 
 const notifications = ref([]);

@@ -48,23 +48,34 @@
               <p class="text-lg text-slate-600 font-medium leading-relaxed italic">
                 {{ reunion.description || 'Aucun détail supplémentaire fourni pour cette session.' }}
               </p>
+              <div v-if="reunion.lieu" class="mt-6 pt-6 border-t border-slate-50">
+                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Lieu / Salle</p>
+                 <p class="text-sm font-bold text-slate-700 italic">{{ reunion.lieu }}</p>
+              </div>
             </div>
 
             <div class="bg-white p-10 rounded-[3rem] border border-slate-100 shadow-sm">
               <div class="flex items-center justify-between mb-8">
                 <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] italic">Équipe Convoquée</h3>
-                <span class="px-3 py-1 bg-slate-50 rounded-lg text-[10px] font-black">{{ (reunion.participants || []).length }} Présents</span>
+                <span class="px-3 py-1 bg-slate-50 rounded-lg text-[10px] font-black">{{ (reunion.invitations || []).length }} Invités</span>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div v-for="user in reunion.participants" :key="user.id"
+                <div v-for="invite in reunion.invitations" :key="invite.id"
                      class="flex items-center gap-4 p-4 rounded-2xl bg-slate-50/50 border border-transparent hover:border-indigo-100 hover:bg-white transition-all group">
                   <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black italic text-xs group-hover:bg-indigo-600 transition-colors">
-                    {{ user.name?.charAt(0) }}
+                    {{ invite.user?.first_name?.charAt(0) || 'U' }}{{ invite.user?.last_name?.charAt(0) || '' }}
                   </div>
                   <div>
-                    <p class="text-xs font-black text-slate-800 uppercase italic">{{ user.name }}</p>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{{ user.role }}</p>
+                    <p class="text-xs font-black text-slate-800 uppercase italic">
+                      {{ invite.user?.first_name }} {{ invite.user?.last_name }}
+                    </p>
+                    <div class="flex items-center gap-2">
+                       <span class="text-[8px] font-black uppercase tracking-tighter"
+                             :class="invite.status === 'accepted' ? 'text-emerald-500' : 'text-amber-500'">
+                         {{ invite.status }}
+                       </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -78,19 +89,14 @@
                 <div>
                   <p class="text-[9px] font-black uppercase tracking-widest text-indigo-200 mb-2 italic text-center">Date du meeting</p>
                   <p class="text-4xl font-black italic text-center tracking-tighter uppercase">
-                    {{ formatFullDate(reunion.date_reunion) }}
+                    {{ formatFullDate(reunion.date) }}
                   </p>
                 </div>
 
-                <div class="flex justify-between items-center bg-white/10 p-6 rounded-2xl backdrop-blur-md">
-                  <div class="text-center">
-                    <p class="text-[8px] font-black uppercase text-indigo-200 italic mb-1">Début</p>
-                    <p class="text-xl font-black italic">{{ reunion.heure_debut }}</p>
-                  </div>
-                  <div class="h-8 w-[1px] bg-white/20"></div>
-                  <div class="text-center">
-                    <p class="text-[8px] font-black uppercase text-indigo-200 italic mb-1">Fin prévue</p>
-                    <p class="text-xl font-black italic">{{ reunion.heure_fin }}</p>
+                <div class="flex justify-center items-center bg-white/10 p-6 rounded-2xl backdrop-blur-md">
+                  <div class="text-center px-4">
+                    <p class="text-[8px] font-black uppercase text-indigo-200 italic mb-1">Horaire</p>
+                    <p class="text-2xl font-black italic">{{ formatHeure(reunion.heure) }}</p>
                   </div>
                 </div>
               </div>
@@ -103,7 +109,9 @@
               </div>
               <div>
                 <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest italic mb-1">Organisé par</p>
-                <p class="text-sm font-black text-slate-900 uppercase italic">{{ reunion.organisateur?.name || 'Responsable Unité' }}</p>
+                <p class="text-sm font-black text-slate-900 uppercase italic">
+                  {{ reunion.creator?.first_name }} {{ reunion.creator?.last_name }}
+                </p>
               </div>
             </div>
 
@@ -137,6 +145,7 @@ const auth = useAuthStore();
 const reunion = ref({});
 const fetching = ref(true);
 
+// Selon ton JSON, c'est creator.id ou user_id
 const isOrganisateur = computed(() => {
   return auth.user?.id === reunion.value.user_id || auth.user?.role === 'admin';
 });
@@ -148,29 +157,37 @@ const fetchReunionDetails = async () => {
     reunion.value = res.data;
   } catch (error) {
     console.error("Erreur de récupération:", error);
-    alert("Réunion introuvable.");
     router.push('/user/reunions');
   } finally {
     fetching.value = false;
   }
 };
 
-const formatFullDate = (date) => {
-  if (!date) return '';
-  return new Date(date).toLocaleDateString('fr-FR', {
+const formatFullDate = (dateStr) => {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('fr-FR', {
     weekday: 'long',
     day: 'numeric',
-    month: 'long',
-    year: 'numeric'
+    month: 'long'
   });
 };
 
-// Actions factices à lier à tes routes
+const formatHeure = (heure) => {
+  if (!heure) return '';
+  return heure.substring(0, 5); // Coupe "17:25:00" en "17:25"
+};
+
 const editReunion = () => router.push(`/user/reunions/${reunion.value.id}/edit`);
+
 const cancelReunion = async () => {
-  if(confirm("Voulez-vous vraiment annuler cette réunion ?")) {
-    await api.delete(`/reunions/${reunion.value.id}`);
-    router.push('/user/reunions');
+  if(confirm("Voulez-vous vraiment supprimer cette réunion ?")) {
+    try {
+      await api.delete(`/reunions/${reunion.value.id}`);
+      router.push('/user/reunions');
+    } catch (e) {
+      alert("Erreur lors de la suppression");
+    }
   }
 };
 
