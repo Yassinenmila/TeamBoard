@@ -76,7 +76,7 @@
               <div>
                 <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Commentaire de validation</p>
                 <p class="text-sm font-bold text-slate-700 italic leading-relaxed">
-                  " {{ demande.commentaire_responsable || 'Aucun motif renseigné.' }} "
+                  " {{ demande.commentaires[0].contenu|| 'Aucun motif renseigné.' }} "
                 </p>
               </div>
             </div>

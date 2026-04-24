@@ -53,10 +53,6 @@ class User extends Authenticatable
         return $this->hasMany(Demande::class);
     }
 
-    public function presences(){
-        return $this->hasMany(Presence::class);
-    }
-
     public function invitations(){
         return $this->hasMany(Invitation::class);
     }
@@ -77,10 +73,6 @@ class User extends Authenticatable
 
     public function tachesAssignes(){
         return $this->belongsToMany(Tache::class, 'affectations', 'user_id', 'tache_id')->withPivot('status')->withTimestamps();
-    }
-
-    public function livrables(){
-        return $this->hasMany(Livrable::class);
     }
 
     public function commentaires(){
