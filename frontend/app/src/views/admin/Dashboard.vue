@@ -49,9 +49,9 @@
             </div>
 
             <div class="flex items-center gap-3">
-              <button class="text-[11px] font-bold text-emerald-600 uppercase tracking-widest hover:bg-emerald-100 transition-colors bg-emerald-50 px-5 py-2.5 rounded-xl">
+              <router-link to="/admin/taches" class="text-[11px] font-bold text-emerald-600 uppercase tracking-widest hover:bg-emerald-100 transition-colors bg-emerald-50 px-5 py-2.5 rounded-xl">
                 Voir tout
-              </button>
+              </router-link>
               <router-link
                 to="/admin/taches/create"
                 class="text-[11px] font-black text-white uppercase tracking-widest bg-slate-900 hover:bg-emerald-600 transition-all px-6 py-2.5 rounded-xl shadow-lg shadow-slate-900/10 active:scale-95"

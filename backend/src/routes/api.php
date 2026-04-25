@@ -11,22 +11,11 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\AnnonceController;
 use App\Http\Controllers\Api\LivrableController;
 
-Route::get('/test', function () {
-    return response()->json(['message' => bcrypt('password')]);
-});
-
-
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/taches/{id}/livrable', function ($id) {
-        return \App\Models\Livrable::where('tache_id', $id)
-            ->latest()
-            ->first();
-        });
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
-    Route::apiResource('liverables', LivrableController::class);
     Route::apiResource('taches',TacheController::class);
     Route::post('/taches/{tache}/assigner', [TacheController::class, 'assigner']);
     Route::apiResource('users', UserController::class);
@@ -35,7 +24,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/reunions/{reunion}/inviter', [ReunionController::class, 'inviter']);
     Route::apiResource('demandes', DemandeController::class);
     Route::post('/demandes/{demande}/traiter', [DemandeController::class, 'traiter']);
-    Route::apiResource('presences', PresenceController::class);
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
     Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);

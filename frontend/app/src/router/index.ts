@@ -79,6 +79,11 @@ const router = createRouter({
           component: () => import('@/views/user/reunions/index.vue')
         },
         {
+          path: 'reunions/create',
+          name: 'user.reunions.create',
+          component: ()=> import ('@/views/user/reunions/create.vue')
+        },
+        {
           path: 'reunions/:id',
           name: 'user.reunions.show',
           component: () => import('@/views/user/reunions/show.vue')

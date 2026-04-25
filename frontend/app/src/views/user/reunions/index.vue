@@ -18,7 +18,7 @@
             </h1>
           </div>
 
-          <div v-if="userRole === 'responsable' || userRole === 'admin'">
+          <div v-if="userRole === 'responsable'">
             <router-link
               to="/user/reunions/create"
               class="flex items-center gap-4 bg-slate-900 text-white px-8 py-5 rounded-[2rem] hover:bg-indigo-600 transition-all duration-300 shadow-xl shadow-slate-900/10 group"
@@ -41,16 +41,16 @@
             class="group relative bg-white rounded-[2.5rem] border border-slate-100 p-8 hover:shadow-2xl transition-all duration-500 flex flex-col lg:flex-row lg:items-center gap-8"
           >
             <div class="flex flex-col items-center justify-center bg-slate-50 rounded-[2rem] px-6 py-4 min-w-[100px]">
-              <span class="text-2xl font-black text-slate-900 italic leading-none">{{ formatDay(reunion.date_reunion) }}</span>
-              <span class="text-[9px] font-black text-indigo-500 uppercase italic">{{ formatMonth(reunion.date_reunion) }}</span>
+              <span class="text-2xl font-black text-slate-900 italic leading-none">{{ formatDay(reunion.date) }}</span>
+              <span class="text-[9px] font-black text-indigo-500 uppercase italic">{{ formatMonth(reunion.date) }}</span>
             </div>
 
             <div class="flex-1 space-y-3">
               <div class="flex items-center gap-3">
                 <span class="text-[9px] font-black px-4 py-1.5 bg-indigo-50 text-indigo-600 rounded-full uppercase tracking-widest">
-                  {{ reunion.heure_debut }} — {{ reunion.heure_fin }}
+                  {{ reunion.heure }}
                 </span>
-                <span v-if="isUpcoming(reunion.date_reunion)" class="animate-pulse w-2 h-2 bg-emerald-500 rounded-full"></span>
+                <span v-if="isUpcoming(reunion.date)" class="animate-pulse w-2 h-2 bg-emerald-500 rounded-full"></span>
               </div>
 
               <h3 class="text-2xl font-black text-slate-800 uppercase italic group-hover:text-indigo-600 transition-colors">
