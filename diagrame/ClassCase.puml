@@ -1,131 +1,144 @@
-@startuml TeamBoard_Classes_Improved
+@startuml
 
-' ===== Roles =====
-enum Role {
-    ADMIN
-    RESPONSABLE
-    MEMBRE
+' =========================
+' CLASSE ABSTRAITE USER
+' =========================
+abstract class User {
+  +id: bigint
+  +firstName: string
+  +lastName: string
+  +email: string
+  +password: string
+  +role: string
+  +createdAt: datetime
+  +updatedAt: datetime
+
+  +login(): boolean
+  +logout(): void
 }
 
-' ===== Utilisateur (Abstraction) =====
-abstract class Utilisateur {
-    -id: int
-    -nom: string
-    -email: string
-    -password: string
-    -role: Role
+' =========================
+' HERITAGE (ROLES)
+' =========================
+
+class Admin {
+  +gererUsers(): void
+  +validerDemande(d: Demande): void
 }
 
-class Admin
-class Responsable
-class Membre
-
-Utilisateur <|-- Admin
-Utilisateur <|-- Responsable
-Utilisateur <|-- Membre
-
-' ===== Demandes (Abstraction) =====
-abstract class Demande {
-    -id: int
-    -type: string
-    -description: text
-    -statut: string
-    -date: DateTime
+class Responsable {
+  +creerTache(): Tache
+  +organiserReunion(): Reunion
 }
 
-class DemandeAdmin
-class DemandePoste
-class DemandeTemps
-class DemandeContrat
-
-Demande <|-- DemandeAdmin
-Demande <|-- DemandePoste
-Demande <|-- DemandeTemps
-Demande <|-- DemandeContrat
-
-' ===== Tâches =====
-class Tache {
-    -id: int
-    -titre: string
-    -description: text
-    -dateLimite: DateTime
-    -statut: string
-    -priorite: string
+class Membre {
+  +repondreInvitation(i: Invitation): void
+  +commenter(c: Commentaire): void
 }
 
-class Affectation {
-    -id: int
-}
+User <|-- Admin
+User <|-- Responsable
+User <|-- Membre
 
-' ===== Commentaire =====
-class Commentaire {
-    -id: int
-    -contenu: text
-    -date: DateTime
-}
-
-' ===== Annonces =====
-enum TypeAnnonce {
-    GENERALE
-    URGENTE
-}
+' =========================
+' CLASSES METIER
+' =========================
 
 class Annonce {
-    -id: int
-    -titre: string
-    -contenu: text
-    -datePublication: DateTime
-    -type: TypeAnnonce
+  +id: bigint
+  +titre: string
+  +contenu: text
+  +type: string
+  +createdAt: datetime
+  +updatedAt: datetime
 }
 
-' ===== Réunions =====
+class Demande {
+  +id: bigint
+  +type: string
+  +description: text
+  +status: string
+  +date: date
+}
+
+class Tache {
+  +id: bigint
+  +titre: string
+  +description: text
+  +status: string
+  +dateLimite: datetime
+}
+
 class Reunion {
-    -id: int
-    -titre: string
-    -description: text
-    -date: DateTime
-    -lieu: string
+  +id: bigint
+  +titre: string
+  +description: text
+  +date: date
+  +heure: time
+  +lieu: string
+}
+
+class Commentaire {
+  +id: bigint
+  +contenu: text
+  +createdAt: datetime
+}
+
+class Notification {
+  +id: bigint
+  +message: string
+  +lu: boolean
+  +createdAt: datetime
+
+  +marquerCommeLu(): void
+}
+
+' =========================
+' TABLES PIVOTS (MANY TO MANY)
+' =========================
+
+class Affectation {
+  +status: string
+  +createdAt: datetime
 }
 
 class Invitation {
-    -id: int
-    -statut: string
+  +status: string
+  +createdAt: datetime
 }
 
-' ===== Notification (Abstraction) =====
-abstract class Notification {
-    -id: int
-    -message: string
-    -lu: boolean
-    -date: DateTime
-}
+' =========================
+' RELATIONS USER
+' =========================
 
-class NotifDemande
-class NotifTache
-class NotifReunion
+User "1" -- "0..*" Annonce : publie
+User "1" -- "0..*" Demande : crée
+User "1" -- "0..*" Tache : crée
+User "1" -- "0..*" Reunion : organise
+User "1" -- "0..*" Commentaire : écrit
 
-Notification <|-- NotifDemande
-Notification <|-- NotifTache
-Notification <|-- NotifReunion
+' =========================
+' MANY TO MANY
+' =========================
 
-' ===== Relations =====
-Utilisateur "1" --> "*" Demande : crée
+User "1" -- "0..*" Affectation
+Tache "1" -- "0..*" Affectation
 
-Utilisateur "1" --> "*" Tache : crée
-Tache "1" --> "*" Affectation
-Utilisateur "1" --> "*" Affectation
+User "1" -- "0..*" Invitation
+Reunion "1" -- "0..*" Invitation
 
-Tache "1" --> "*" Commentaire
-Demande "1" --> "*" Commentaire
-Utilisateur "1" --> "*" Commentaire
+' =========================
+' COMPOSITION
+' =========================
 
-Utilisateur "1" --> "*" Annonce : publie
+Annonce "1" *-- "0..*" Commentaire
+Tache "1" *-- "0..*" Commentaire
+Reunion "1" *-- "0..*" Commentaire
 
-Utilisateur "1" --> "*" Reunion : crée
-Reunion "1" --> "*" Invitation
-Utilisateur "1" --> "*" Invitation
+' =========================
+' AGREGATION
+' =========================
 
-
-Utilisateur "1" --> "*" Notification
+User "1" o-- "0..*" Notification
 
 @enduml

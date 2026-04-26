@@ -14,7 +14,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->role !== 'admin') {
+        if ($request->user()->role === 'membre') {
             return response()->json(['message' => 'Non autorisé'], 403);
         }
 

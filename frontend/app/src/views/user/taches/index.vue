@@ -25,8 +25,8 @@
             </div>
 
             <router-link
-              v-if="userRole === 'responsable' || userRole === 'admin'"
-              to="/admin/taches/create"
+              v-if="userRole === 'responsable'"
+              to="/user/taches/create"
               class="bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] px-8 py-5 rounded-2xl hover:bg-emerald-600 transition-all shadow-xl shadow-slate-900/10 active:scale-95 flex items-center gap-3"
             >
               <span>+ Nouvelle Tâche</span>

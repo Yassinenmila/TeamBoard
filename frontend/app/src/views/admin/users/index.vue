@@ -30,7 +30,6 @@
         </div>
 
         <div v-else class="max-w-7xl mx-auto space-y-12">
-
           <section class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
             <div class="p-8 border-b border-slate-50 flex justify-between items-center bg-white">
               <h2 class="text-xs font-black text-slate-900 uppercase tracking-[0.3em]">Répertoire global</h2>
@@ -62,7 +61,7 @@
                     <td class="px-8 py-6">
                       <div class="flex items-center gap-4">
                         <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center text-[10px] font-black italic group-hover:bg-emerald-600 transition-colors">
-                          {{ user.first_name[0] }}{{ user.last_name[0] }}
+                          {{ user.first_name?.[0] }}{{ user.last_name?.[0] }}
                         </div>
                         <div class="flex flex-col">
                           <p class="text-sm font-black text-slate-900 uppercase tracking-tight">
@@ -103,7 +102,6 @@
               </table>
             </div>
           </section>
-
         </div>
       </div>
     </main>
@@ -112,20 +110,21 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router'; // IMPORT DU ROUTER
+import { useRouter } from 'vue-router';
 import Sidebar from '@/components/admin/Sidebar.vue';
 import api from '@/services/api';
 
-const router = useRouter(); // INITIALISATION
+const router = useRouter();
 const users = ref([]);
 const loading = ref(true);
 const searchQuery = ref('');
 
-// FONCTION DE NAVIGATION
+// Navigation vers la fiche détaillée
 const goToUser = (id) => {
-  router.push(`/users/${id}`);
+  router.push(`/admin/users/${id}`);
 };
 
+// Récupération des utilisateurs
 const fetchUsers = async () => {
   try {
     const res = await api.get('/users', {
@@ -133,17 +132,40 @@ const fetchUsers = async () => {
     });
     users.value = res.data;
   } catch (error) {
-    console.error("Erreur:", error);
+    console.error("Erreur de chargement:", error);
   } finally {
     loading.value = false;
   }
 };
 
+// Suppression d'un utilisateur
+const deleteUser = async (id) => {
+  if (!confirm("Êtes-vous sûr de vouloir supprimer ce collaborateur ?")) return;
+
+  try {
+    await api.delete(`/users/${id}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+    });
+    // Mise à jour de la liste locale après suppression réussie
+    users.value = users.value.filter(user => user.id !== id);
+  } catch (error) {
+    console.error("Erreur lors de la suppression:", error);
+    alert("Impossible de supprimer l'utilisateur.");
+  }
+};
+
+// Recherche filtrée
 const filteredUsers = computed(() => {
+  const search = searchQuery.value.toLowerCase().trim();
+  if (!search) return users.value;
+
   return users.value.filter(user => {
-    const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
-    const search = searchQuery.value.toLowerCase();
-    return fullName.includes(search) || user.email.toLowerCase().includes(search);
+    const firstName = user.first_name?.toLowerCase() || '';
+    const lastName = user.last_name?.toLowerCase() || '';
+    const email = user.email?.toLowerCase() || '';
+    const fullName = `${firstName} ${lastName}`;
+
+    return fullName.includes(search) || email.includes(search);
   });
 });
 

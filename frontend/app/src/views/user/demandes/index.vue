@@ -54,7 +54,7 @@
                   {{ demande.objet }}
                 </h3>
                 <p class="text-[11px] text-slate-400 font-bold italic" v-if="userRole === 'responsable'">
-                  Demandeur : <span class="text-slate-700 underline decoration-amber-200">{{ demande.user?.name }}</span>
+                  Demandeur : <span class="text-slate-700 underline decoration-amber-200">{{ demande.user?.first_name }} {{ demande.user?.last_name }}</span>
                 </p>
               </div>
             </div>

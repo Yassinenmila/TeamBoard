@@ -73,7 +73,12 @@
               >
                 <span class="text-[10px] font-black uppercase italic tracking-widest">Rejoindre ↗</span>
               </a>
-
+              <router-link
+                v-if="user.id === reunion.user_id"
+                :to="`/user/reunions/${reunion.id}/edit`"
+                class="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:bg-slate-900 hover:text-white transition-all">
+                <span class="text-[10px] font-black uppercase italic">Modifier</span>
+              </router-link>
               <router-link
                 :to="`/user/reunions/${reunion.id}`"
                 class="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:bg-slate-900 hover:text-white transition-all"
@@ -102,13 +107,13 @@ import { useAuthStore } from '@/stores/auth'
 const auth = useAuthStore()
 const reunions = ref([])
 const loading = ref(true)
+const  user = computed(()=> auth.user)
 
 const userRole = computed(() => auth.user?.role)
 
 const fetchReunions = async () => {
   try {
     loading.value = true
-    // Ton API doit retourner les réunions liées à l'user (pivot ou créateur)
     const res = await api.get('/reunions')
     reunions.value = res.data
   } catch (e) {

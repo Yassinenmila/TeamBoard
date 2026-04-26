@@ -1,158 +1,126 @@
-@startuml TeamBoard_ERD
+@startuml ''
 
-entity users {1
-    id PK
-    nom
-    email
-    password
-    role
+'tableau users
+
+entity users {
+  id : bigint
+  first_name : varchar
+  last_name : varchar
+  email : varchar
+  password : varchar
+  role : varchar
+  created_at : timestamp
+  updated_at : timestamp
 }
 
-entity demandes {4
-    id PK
-    user_id FK
-    type
-    description
-    statut
-    date
-}
-
-entity note_internes {4
-    id PK
-    demande_id FK
-    contenu
-    date
-}
-
-entity taches {1
-    id PK
-    titre
-    description
-    statut
-    priorite
-    date_limite
-    created_by FK
-}
-
-entity affectations {1
-    id PK
-    tache_id FK
-    user_id FK
-}
-
-entity livrables {
-    id PK
-    tache_id FK
-    user_id FK
-    type
-    url
-    date
-}
-
-entity commentaires {
-    id PK
-    user_id FK
-    contenu
-    tache_id FK
-    demande_id FK
-    date
-}
-
+' table annonces 
 entity annonces {
-    id PK
-    user_id FK
-    titre
-    contenu
-    type
-    date_publication
+  id : bigint
+  titre : varchar
+  contenu : text
+  type : varchar
+  user_id : bigint
+  created_at : timestamp
+  updated_at : timestamp
 }
 
-entity reunions {
-    id PK
-    user_id FK
-    titre
-    description
-    date
-    lieu
+' table demandes 
+
+entity demandes {
+  id : bigint
+  type : varchar
+  description : text
+  status : varchar
+  date : date
+  user_id : bigint
+  created_at : timestamp
+  updated_at : timestamp
 }
 
-entity invitations {
-    id PK
-    reunion_id FK
-    user_id FK
-    statut
-}
-
-entity feedbacks {
-    id PK
-    user_id FK
-    titre
-    description
-    date
-}
-
-entity reponse_feedbacks {
-    id PK
-    feedback_id FK
-    user_id FK
-    contenu
-}
-
-entity presences {
-    id PK
-    user_id FK
-    date
-    etat
-}
+'table notifications
 
 entity notifications {
-    id PK
-    user_id FK
-    message
-    type
-    lu
-    date
+  id : bigint
+  message : text
+  notifiable_type : varchar
+  notifiable_id : bigint
+  lu : boolean
+  user_id : bigint
+  created_at : timestamp
+  updated_at : timestamp
 }
 
-entity logs {
-    id PK
-    user_id FK
-    action
-    model_type
-    model_id
-    date
+'table taches
+
+entity taches {
+  id : bigint
+  titre : varchar
+  description : text
+  status : varchar
+  date_limite : timestamp
+  created_by : bigint
+  created_at : timestamp
+  updated_at : timestamp
 }
 
-' ===== Relations =====
-users ||--o{ demandes
-demandes ||--o{ note_internes
+'table affectations
 
-users ||--o{ taches : crée
-taches ||--o{ affectations
-users ||--o{ affectations
+entity affectations {
+  id : bigint
+  tache_id : bigint
+  user_id : bigint
+  status : varchar
+  created_at : timestamp
+  updated_at : timestamp
+}
 
-taches ||--o{ livrables
-users ||--o{ livrables
+'table reunions
 
-taches ||--o{ commentaires
-demandes ||--o{ commentaires
-users ||--o{ commentaires
+entity reunions {
+  id : bigint
+  titre : varchar
+  description : text
+  date : date
+  heure : time
+  lieu : varchar
+  user_id : bigint
+  created_at : timestamp
+  updated_at : timestamp
+}
+
+'table invitations
+
+entity invitations {
+  id : bigint
+  reunion_id : bigint
+  user_id : bigint
+  status : varchar
+  created_at : timestamp
+  updated_at : timestamp
+}
+
+'table commentaires
+
+entity commentaires {
+  id : bigint
+  user_id : bigint
+  contenu : text
+  commentable_type : varchar
+  commentable_id : bigint
+  created_at : timestamp
+  updated_at : timestamp
+}
 
 users ||--o{ annonces
-
-users ||--o{ reunions
-reunions ||--o{ invitations
-users ||--o{ invitations
-
-users ||--o{ feedbacks
-feedbacks ||--o{ reponse_feedbacks
-users ||--o{ reponse_feedbacks
-
-users ||--o{ presences
-
+users ||--o{ demandes
 users ||--o{ notifications
+users ||--o{ taches : "created_by"
+users ||--o{ affectations
+users ||--o{ reunions
+users ||--o{ invitations
+users ||--o{ commentaires
 
-users ||--o{ logs
+taches ||--o{ affectations
+reunions ||--o{ invitations
 
 @enduml
-

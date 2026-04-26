@@ -74,6 +74,16 @@ const router = createRouter({
           component: () => import('@/views/user/taches/show.vue')
         },
         {
+          path: 'taches/create',
+          name: 'user.taches.create',
+          component : ()=> import('@/views/user/taches/create.vue')
+        },
+        {
+          path: 'taches/:id/edit',
+          name: 'user.taches.edit',
+          component: () => import('@/views/user/taches/edit.vue')
+        },
+        {
           path: 'reunions',
           name: 'user.reunions',
           component: () => import('@/views/user/reunions/index.vue')
@@ -87,6 +97,11 @@ const router = createRouter({
           path: 'reunions/:id',
           name: 'user.reunions.show',
           component: () => import('@/views/user/reunions/show.vue')
+        },
+        {
+          path: 'reunions/:id/edit',
+          name: 'user.reunions.edit',
+          component: () => import('@/views/user/reunions/edit.vue')
         },
         {
           path: 'demandes',
@@ -128,7 +143,7 @@ const router = createRouter({
           meta: { roles: ['responsable'] }
         },
         {
-          path:'annances/edit/:id',
+          path:'annances/:id/edit',
           name: 'user.annances.edit',
           component: () => import('@/views/user/annances/edit.vue'),
           meta: { roles: ['responsable'] }

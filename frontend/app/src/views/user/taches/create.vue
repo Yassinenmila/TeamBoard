@@ -96,7 +96,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import Sidebar from '@/components/admin/Sidebar.vue';
+import Sidebar from '@/components/users/Sidebar.vue';
 import axios from 'axios'; // Ou ton instance API personnalisée
 
 const loading = ref(false);

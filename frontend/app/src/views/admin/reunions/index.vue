@@ -14,16 +14,6 @@
         </router-link>
       </header>
 
-      <div class="px-12 py-4 bg-white/50 backdrop-blur-md border-b border-slate-50 flex gap-8">
-        <button class="relative py-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 italic group">
-          À venir
-          <div class="absolute -bottom-4 left-0 w-full h-0.5 bg-emerald-500"></div>
-        </button>
-        <button class="py-2 text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 hover:text-slate-600 transition-colors italic">
-          Archives
-        </button>
-      </div>
-
       <div class="flex-1 overflow-y-auto p-12 bg-slate-50/30 custom-scroll">
         <div v-if="loading" class="flex flex-col items-center justify-center py-32 space-y-4">
           <div class="w-12 h-12 border-4 border-slate-100 border-t-emerald-500 rounded-full animate-spin"></div>
