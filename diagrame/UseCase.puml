@@ -1,6 +1,7 @@
 @startuml TeamBoard
 left to right direction
 
+actor Visiteur
 actor Admin
 actor Membre
 actor Responsable
@@ -14,10 +15,7 @@ rectangle TeamBoard {
     ' Membre
     usecase "Consulter les nouveautés" as News
     usecase "Soumettre une demande" as Ask
-    usecase "Demande liée au temps de travail" as AskTemp
-    usecase "Demande administrative" as AskAdmin
-    usecase "Demande liée au poste" as AskPost
-    usecase "Demande contractuelle" as AskContract
+    usecase "Consulter les réunions" as ViewMeetings
 
     ' Responsable
     usecase "Traiter les demandes" as ManageAsk
@@ -26,6 +24,13 @@ rectangle TeamBoard {
     usecase "Gérer les nouveautés" as ManageNews
     usecase "Gérer les notifications" as ManageNotice
     usecase "Gérer les employés" as ManageAccounts
+
+    ' Réunions
+    usecase "Planifier une réunion" as PlanMeeting
+    usecase "Modifier une réunion" as EditMeeting
+    usecase "Supprimer une réunion" as DeleteMeeting
+    usecase "Consulter les réunions (Responsable)" as ViewMeetingsResp
+
     ' Admin
     usecase "Gérer les comptes des responsables" as gestion_responsables
     usecase "Gérer les nouveautés" as gestion_nouveautes
@@ -33,42 +38,54 @@ rectangle TeamBoard {
     usecase "Gérer les comptes des administrateurs" as gestion_admins
 }
 
+'--------- Visiteur -----------
+Visiteur --> Login 
+
 ' -------- Relations Membre --------
 Membre --> Login
 Membre --> Logout
 Membre --> News
 Membre --> Ask
-
-Ask <|-- AskTemp
-Ask <|-- AskAdmin
-Ask <|-- AskPost
-Ask <|-- AskContract
+Membre --> ViewMeetings
 
 News ..> Login : <<include>>
 Ask ..> Login : <<include>>
+ViewMeetings ..> Login : <<include>>
 
 ' -------- Relations Responsable --------
-Responsable --> Login
 Responsable --> Logout
 Responsable --> ManageAsk
 Responsable --> ManageNews
 Responsable --> ManageNotice
 Responsable --> ManageAccounts
 
+Responsable --> PlanMeeting
+Responsable --> ViewMeetingsResp
+
 ManageAsk ..> Login : <<include>>
 ManageNews ..> Login : <<include>>
 ManageNotice ..> Login : <<include>>
 ManageAccounts ..> Login : <<include>>
 
+PlanMeeting ..> Login : <<include>>
+ViewMeetingsResp ..> Login : <<include>>
+
+PlanMeeting ..> EditMeeting : <<extend>>
+PlanMeeting ..> DeleteMeeting : <<extend>>
+
 ManageAsk ..> AcceptAsk : <<extend>>
 ManageAsk ..> RefuseAsk : <<extend>>
 
 ' -------- Relations Admin --------
-Admin --> Login
 Admin --> Logout
 Admin --> gestion_admins
 Admin --> gestion_membres
 Admin --> gestion_responsables
 Admin --> gestion_nouveautes
+
+gestion_admins ..> Login : <<include>>
+gestion_membres ..> Login : <<include>>
+gestion_responsables ..> Login : <<include>>
+gestion_nouveautes ..> Login : <<include>>
 
 @enduml

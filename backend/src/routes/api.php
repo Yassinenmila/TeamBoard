@@ -6,10 +6,8 @@ use App\Http\Controllers\Api\TacheController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ReunionController;
 use App\Http\Controllers\Api\DemandeController;
-use App\Http\Controllers\Api\PresenceController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\AnnonceController;
-use App\Http\Controllers\Api\LivrableController;
 
 Route::post('/login', [AuthController::class, 'login']);
 

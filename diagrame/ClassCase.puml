@@ -1,56 +1,39 @@
 @startuml
 
-' =========================
-' CLASSE ABSTRAITE USER
-' =========================
+'class abstraite
 abstract class User {
   +id: bigint
   +firstName: string
   +lastName: string
   +email: string
   +password: string
-  +role: string
-  +createdAt: datetime
-  +updatedAt: datetime
-
-  +login(): boolean
-  +logout(): void
 }
 
-' =========================
-' HERITAGE (ROLES)
-' =========================
+' heritage 
 
 class Admin {
-  +gererUsers(): void
-  +validerDemande(d: Demande): void
+  - role:string
 }
 
 class Responsable {
-  +creerTache(): Tache
-  +organiserReunion(): Reunion
+  - role:string
 }
 
 class Membre {
-  +repondreInvitation(i: Invitation): void
-  +commenter(c: Commentaire): void
+  - role:string
 }
 
 User <|-- Admin
 User <|-- Responsable
 User <|-- Membre
 
-' =========================
-' CLASSES METIER
-' =========================
+' les class
 
 class Annonce {
   +id: bigint
   +titre: string
   +contenu: text
   +type: string
-  +createdAt: datetime
-  +updatedAt: datetime
 }
 
 class Demande {
@@ -82,44 +65,42 @@ class Commentaire {
   +id: bigint
   +contenu: text
   +createdAt: datetime
+  +user_id:bigint
+  +commentable_id: bigint
+  +commentable_type: string
 }
 
 class Notification {
   +id: bigint
   +message: string
   +lu: boolean
-  +createdAt: datetime
-
-  +marquerCommeLu(): void
+  +notificable_id: bigint
+  +notificable_type:bigint
 }
 
-' =========================
-' TABLES PIVOTS (MANY TO MANY)
-' =========================
+'tableau piveau
 
 class Affectation {
   +status: string
-  +createdAt: datetime
 }
 
 class Invitation {
   +status: string
-  +createdAt: datetime
 }
 
-' =========================
-' RELATIONS USER
-' =========================
+' user relations
 
-User "1" -- "0..*" Annonce : publie
-User "1" -- "0..*" Demande : crée
+User "1" -- "0..*" Annonce 
 User "1" -- "0..*" Tache : crée
 User "1" -- "0..*" Reunion : organise
-User "1" -- "0..*" Commentaire : écrit
+Admin "1" -- "0..*" Commentaire : écrit
+Responsable "1" -- "0..*" Commentaire : écrit
 
-' =========================
-' MANY TO MANY
-' =========================
+Membre "1" -- "0..*" Demande : crée
+Responsable "1" -- "0..*" Demande : traiter
+Admin "1" -- "0..*" Demande : traiter
+
+' many to many
 
 User "1" -- "0..*" Affectation
 Tache "1" -- "0..*" Affectation
@@ -127,17 +108,17 @@ Tache "1" -- "0..*" Affectation
 User "1" -- "0..*" Invitation
 Reunion "1" -- "0..*" Invitation
 
-' =========================
-' COMPOSITION
-' =========================
+'la composition
 
 Annonce "1" *-- "0..*" Commentaire
 Tache "1" *-- "0..*" Commentaire
 Reunion "1" *-- "0..*" Commentaire
+Tache "1" *-- "0..*" Notification
+Reunion "1" *-- "0..*" Notification
+Annonce "1" *-- "0..*" Notification
 
-' =========================
-' AGREGATION
-' =========================
+
+' agregation
 
 User "1" o-- "0..*" Notification
 

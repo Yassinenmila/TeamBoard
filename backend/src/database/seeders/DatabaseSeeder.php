@@ -8,6 +8,8 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Annonce;
 use App\Models\Demande;
+use App\Models\Invitation;
+use App\Models\Reunion;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,5 +24,7 @@ class DatabaseSeeder extends Seeder
         Tache::factory()->count(10)->create();
         Annonce::factory()->count(10)->create();
         Demande::factory()->count(10)->create();
+        Invitation::factory()->count(10)->create();
+        Reunion::factory()->count(10)->create();
     }
 }
