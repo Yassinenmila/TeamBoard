@@ -1,31 +1,14 @@
 @startuml
 
 'class abstraite
-abstract class User {
+class User {
   +id: bigint
   +firstName: string
   +lastName: string
   +email: string
+  +role:string
   +password: string
 }
-
-' heritage 
-
-class Admin {
-  - role:string
-}
-
-class Responsable {
-  - role:string
-}
-
-class Membre {
-  - role:string
-}
-
-User <|-- Admin
-User <|-- Responsable
-User <|-- Membre
 
 ' les class
 
@@ -66,60 +49,56 @@ class Commentaire {
   +contenu: text
   +createdAt: datetime
   +user_id:bigint
-  +commentable_id: bigint
-  +commentable_type: string
 }
+note right of Commentaire
+Relation polymorphique :
+Tache, Reunion, Demande
+end note
 
 class Notification {
   +id: bigint
   +message: string
   +lu: boolean
-  +notificable_id: bigint
-  +notificable_type:bigint
 }
+note right of Notification
+Relation polymorphique :
+Tache, Reunion, Demande, Annonce
+end note
+
 
 'tableau piveau
 
 class Affectation {
-  +status: string
+  
 }
 
 class Invitation {
-  +status: string
+  
 }
 
 ' user relations
 
 User "1" -- "0..*" Annonce 
-User "1" -- "0..*" Tache : crée
-User "1" -- "0..*" Reunion : organise
-Admin "1" -- "0..*" Commentaire : écrit
-Responsable "1" -- "0..*" Commentaire : écrit
-
-Membre "1" -- "0..*" Demande : crée
-Responsable "1" -- "0..*" Demande : traiter
-Admin "1" -- "0..*" Demande : traiter
+User "1" -- "0..*" Tache 
+User "1" -- "0..*" Reunion 
+User "1" -- "0..*" Commentaire 
+User "1" -- "0..*" Demande 
 
 ' many to many
 
-User "1" -- "0..*" Affectation
-Tache "1" -- "0..*" Affectation
-
-User "1" -- "0..*" Invitation
-Reunion "1" -- "0..*" Invitation
+(User,Tache) .. Affectation
+(User, Reunion) .. Invitation
 
 'la composition
 
-Annonce "1" *-- "0..*" Commentaire
+Demande "1" *-- "0..*" Commentaire
 Tache "1" *-- "0..*" Commentaire
 Reunion "1" *-- "0..*" Commentaire
+
+
 Tache "1" *-- "0..*" Notification
 Reunion "1" *-- "0..*" Notification
 Annonce "1" *-- "0..*" Notification
-
-
-' agregation
-
-User "1" o-- "0..*" Notification
+Demande "1" *-- "0..*" Notification
 
 @enduml
