@@ -8,6 +8,21 @@ use App\Http\Controllers\Api\ReunionController;
 use App\Http\Controllers\Api\DemandeController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\AnnonceController;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
+
+Route::get('/test', function () {
+
+
+    $data= User::all();
+
+    return response()->json([
+        'data' => $data
+    ]);
+
+});
+
+
 
 Route::post('/login', [AuthController::class, 'login']);
 

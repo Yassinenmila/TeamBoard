@@ -1,4 +1,4 @@
-@startuml
+@startuml ''
 
 'class abstraite
 class User {
@@ -47,8 +47,6 @@ class Reunion {
 class Commentaire {
   +id: bigint
   +contenu: text
-  +createdAt: datetime
-  +user_id:bigint
 }
 note right of Commentaire
 Relation polymorphique :
@@ -69,11 +67,11 @@ end note
 'tableau piveau
 
 class Affectation {
-  
+  +status:string
 }
 
 class Invitation {
-  
+  +status:string
 }
 
 ' user relations

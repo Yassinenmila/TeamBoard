@@ -6,6 +6,10 @@ actor Admin
 actor Membre
 actor Responsable
 
+'  Héritage
+Membre <|-- Responsable
+Responsable <|-- Admin
+
 rectangle TeamBoard {
 
     ' Authentification
@@ -13,79 +17,93 @@ rectangle TeamBoard {
     usecase "Se déconnecter" as Logout
 
     ' Membre
-    usecase "Consulter les nouveautés" as News
+    usecase "Consulter les annonces" as News
     usecase "Soumettre une demande" as Ask
     usecase "Consulter les réunions" as ViewMeetings
 
     ' Responsable
+    usecase "gestion des taches" as taches
+    usecase "ajouter une tache" as add_tache
+    usecase "modifier une tache" as modify_tache
+    usecase "suprimer une tache" as delete_tache
     usecase "Traiter les demandes" as ManageAsk
     usecase "Accepter la demande" as AcceptAsk
     usecase "Refuser la demande" as RefuseAsk
     usecase "Gérer les nouveautés" as ManageNews
+    usecase "Creer une annonce" as annonce_create
+    usecase "Modifier une annonce" as annonce_modifier
+    usecase "suprimer une annonce" as annonce_suprimer
     usecase "Gérer les notifications" as ManageNotice
-    usecase "Gérer les employés" as ManageAccounts
-
+    usecase "marquer comme lu" as vue 
+    usecase "marquer tout comme lu" as all_vue
+    usecase "ajouter un employer" as add_employ
+    usecase "modifier un employer" as modify_employ
+    usecase "suprimer un employer" as delete_employ
+    
     ' Réunions
+    usecase "gestion des reunion" as manage_meeting
     usecase "Planifier une réunion" as PlanMeeting
     usecase "Modifier une réunion" as EditMeeting
     usecase "Supprimer une réunion" as DeleteMeeting
-    usecase "Consulter les réunions (Responsable)" as ViewMeetingsResp
 
     ' Admin
-    usecase "Gérer les comptes des responsables" as gestion_responsables
-    usecase "Gérer les nouveautés" as gestion_nouveautes
-    usecase "Gérer les comptes des membres" as gestion_membres
-    usecase "Gérer les comptes des administrateurs" as gestion_admins
+    usecase "gestion des comptes" as gestion_compts
 }
 
 '--------- Visiteur -----------
 Visiteur --> Login 
 
 ' -------- Relations Membre --------
-Membre --> Login
 Membre --> Logout
 Membre --> News
 Membre --> Ask
 Membre --> ViewMeetings
+Membre --> ManageNotice
 
+ManageNotice ..> Login : <<include>>
 News ..> Login : <<include>>
 Ask ..> Login : <<include>>
 ViewMeetings ..> Login : <<include>>
 
 ' -------- Relations Responsable --------
-Responsable --> Logout
 Responsable --> ManageAsk
 Responsable --> ManageNews
-Responsable --> ManageNotice
-Responsable --> ManageAccounts
+Responsable --> manage_meeting
+Responsable --> taches
 
-Responsable --> PlanMeeting
-Responsable --> ViewMeetingsResp
+taches ..> Login : <<include>>
+
+taches <.. add_tache : <<extend>>
+taches <.. modify_tache : <<extend>>
+taches <.. delete_tache : <<extend>>
+
 
 ManageAsk ..> Login : <<include>>
 ManageNews ..> Login : <<include>>
-ManageNotice ..> Login : <<include>>
-ManageAccounts ..> Login : <<include>>
 
-PlanMeeting ..> Login : <<include>>
-ViewMeetingsResp ..> Login : <<include>>
+ManageNews <.. annonce_create : <<extend>>
+ManageNews <.. annonce_modifier : <<extend>>
+ManageNews <.. annonce_suprimer : <<extend>>
 
-PlanMeeting ..> EditMeeting : <<extend>>
-PlanMeeting ..> DeleteMeeting : <<extend>>
+ManageNotice <.. vue : <<extend>>
+ManageNotice <.. all_vue : <<extend>>
 
-ManageAsk ..> AcceptAsk : <<extend>>
-ManageAsk ..> RefuseAsk : <<extend>>
+manage_meeting ..> Login : <<include>>
+
+manage_meeting <.. PlanMeeting : <<extend>>
+manage_meeting <.. EditMeeting : <<extend>>
+manage_meeting <.. DeleteMeeting : <<extend>>
+
+ManageAsk <.. AcceptAsk : <<extend>>
+ManageAsk <.. RefuseAsk : <<extend>>
+ManageAsk ..> Login : <<include>>
 
 ' -------- Relations Admin --------
-Admin --> Logout
-Admin --> gestion_admins
-Admin --> gestion_membres
-Admin --> gestion_responsables
-Admin --> gestion_nouveautes
+Admin --> gestion_compts
+gestion_compts ..> Login : <<include>>
+gestion_compts <.. add_employ :<<extend>>
+gestion_compts <.. modify_employ :<<extend>>
+gestion_compts <.. delete_employ :<<extend>>
 
-gestion_admins ..> Login : <<include>>
-gestion_membres ..> Login : <<include>>
-gestion_responsables ..> Login : <<include>>
-gestion_nouveautes ..> Login : <<include>>
 
 @enduml
